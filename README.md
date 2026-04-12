@@ -194,3 +194,9 @@ Sollten Ihnen derartige Fehler auffallen, freue ich mich über Nachberichtigung 
   ```
   - Fette und kursive Auszeichnung (in Fraktur historisch unüblich) werden ggf. als `*...*` bzw. `_..._` kodiert.
 
+
+---
+
+
+## Changelog
+- 2026-04-12 Release of »Dat veerte Gebott«
