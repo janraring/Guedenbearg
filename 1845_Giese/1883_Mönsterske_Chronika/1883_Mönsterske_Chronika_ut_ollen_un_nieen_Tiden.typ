@@ -4078,6 +4078,6 @@ Druck von Bauer & Witzler in Oberhausen.
 
 
 
-// --------------------------
-// END OF »DAT VEERTE GEBOTT«
-// --------------------------
+// ---------------------------------------------------
+// END OF »MÖNSTERSK CHRONICA UT OLLEN UN NIEEN TIDEN«
+// ---------------------------------------------------
