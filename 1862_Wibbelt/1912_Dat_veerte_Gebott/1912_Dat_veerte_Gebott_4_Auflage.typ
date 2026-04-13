@@ -27,7 +27,13 @@
 // Work exhibition:  https://augustinwibbelt.de/wp-content/uploads/2022/02/21_c.jpg
 //
 // Released:      2026-04-12
-// Latest update: 2026-04-12
+// Latest update: 2026-04-13
+//
+// Editorial process:
+//   1) Manual transcription (no markup; removed hyphens and page breaks).
+//   2) Comparison and correction against an OCR transcription.
+//   3) Added markup and re-inserted hyphens and page breaks.
+//   4) Added all Footnotes.
 
 
 // === MARKUP AND DEBUGGING ===
@@ -12042,6 +12048,7 @@ de Backen.\
 
 Un von’t Duorp hiär klüngen de Sunndags-?\
 klocken.\
+
 
 
 
