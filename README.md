@@ -199,5 +199,6 @@ Sollten Ihnen derartige Fehler auffallen, freue ich mich über Nachberichtigung 
 
 
 ## Changelog
-- *2026-04-12* Release of »Dat veerte Gebott«
-- *2026-04-13* Release of »Mönsterske Chronika ut ollen un nieen Tiden«
+- **2026-04-12** Release of »Dat veerte Gebott«
+- **2026-04-13** Release of »Mönsterske Chronika ut ollen un nieen Tiden«
+- **2026-04-14** Releas of »De Iärfschopp«
