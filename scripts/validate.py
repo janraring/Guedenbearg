@@ -2,6 +2,8 @@ from datetime import date
 from typing import NamedTuple
 import regex as re
 
+# === Tags used in transcriptions ===
+
 METADATA_TAG = "META DATA"
 TYPST_SETTING_TAG = "TYPST SETTING"
 BLANK_PAGE_TAG = "BLANK PAGE"
@@ -9,6 +11,9 @@ TITLE_PAGE_TAG = "TITLE PAGE"
 FRONT_MATTER_TAG = "FRONT MATTER"
 MAIN_MATTER_TAG = "MAIN MATTER"
 BACK_MATTER_TAG = "BACK MATTER"
+
+
+# === Lists for issues and non-issues ===
 
 
 class Issue(NamedTuple):
@@ -33,7 +38,21 @@ def add_nonissue(msg):
     NON_ISSUES.append(NonIssue(msg))
 
 
+# === Tests ===
+
+
 def has_license(raw: str):
+    """Asserts the following assumption(s):
+    - The document has exactly one block comment (/* ... */),
+      namely the license.
+    - This license contains the current year.
+    - If there is only one year indicated in the copyright note,
+      the license is a square block of 16 * 59 - 1 characters,
+      16 lines, 59 characters per line except for the last one
+    - If there are two year indicated in the copyright note,
+      the license is a square block of 16 * 64 - 1 characters,
+      16 lines, 64 characters per line except for the last one
+    """
     licenses = re.findall(r"^/\*.+\*/", raw, flags=re.DOTALL)
     year = date.today().year
     if len(licenses) != 1:
@@ -46,27 +65,55 @@ def has_license(raw: str):
         add_nonissue("The document appears to have an up to date license")
 
 
-def has_tailing_whitespace(lines: list[str]):
-    tailing_whitespace = False
+def has_trailing_whitespace(lines: list[str]):
+    """Asserts the following assumption(s):
+    - No non-empty line should have trailing whitespace.
+    """
+    trailing_whitespace = False
     for n, line in enumerate(lines):
         if line != "" and line[-1].isspace():
-            add_issue(n, line, "Tailing whitespace")
-            tailing_whitespace = True
-    if not tailing_whitespace:
-        add_nonissue("No tailing whitespaces")
+            add_issue(n, line, "trailing whitespace")
+            trailing_whitespace = True
+    if not trailing_whitespace:
+        add_nonissue("No trailing whitespaces")
 
 
 def has_valid_spacing(lines: list[str]):
+    """There are only a few distinct types of lines:
+    - empty lines
+    - license lines (start with "/*")
+    - typst settings (start with "#")
+    - opening tags (start with "// < ")
+    - closing tags (start with "// </")
+    - other meta lines (start with "//")
+    - headlines (start with "=")
+    - actual text lines (end with "\\" or "#pagebreak()")
+
+    Asserts the following assumption(s):
+    - Every line is of one of the types listed above
+    - 0 empty lines before the license
+    - 3 empty lines after the license
+    - 0 empty lines before a block of settings
+    - 1 empty line after a block of settings
+    - 3 empty lines before an opening tag
+    - 1 empty line after an opening tag
+    - 1 empty line before a closing tag
+    - 3 empty lines after a closing tag
+    - 0 empty lines around other meta lines
+    - 0 empty lines before a block of text
+    - 1 empty line after a block of text
+    - In case of conflicting demands, take the maximum
+    """
+
     min_padding = {
+        "l": (0, 0),  # License (inner lines)
+        "L": (0, 3),  # License (outer lines)
         "s": (0, 0),  # Setting (inner lines)
         "S": (0, 1),  # Setting (outer lines)
-        "H": (3, 1),  # Headline
-        "l": (0, 0),  # License (inner lines)
-        "L": (0, 0),  # License (outer lines)
-        "M": (0, 0),  # Meta
         "O": (3, 1),  # Opening tag
         "C": (1, 3),  # Closing tag
-        "P": (0, 1),  # Paragraph
+        "M": (0, 0),  # Meta
+        "H": (3, 1),  # Headline
         "t": (0, 0),  # Text (inner lines)
         "T": (0, 1),  # Text (outer lines)
     }
@@ -81,8 +128,6 @@ def has_valid_spacing(lines: list[str]):
             n_newlines += 1
             prev_line_type = prev_line_type.upper()
             continue
-        elif line.startswith("/**"):
-            next_line_type = "L"
         elif line.startswith("/*"):
             next_line_type = "l"
         elif line.startswith("// < "):
@@ -130,6 +175,10 @@ def has_valid_spacing(lines: list[str]):
 
 
 def has_matching_tags(lines: list[str]):
+    """Asserts the following assumption(s):
+    - Every opening tag has a matching closing tag
+    - The spans are nested, i.e. they do not cross
+    """
     stack = []
 
     tags_match = True
@@ -154,6 +203,10 @@ def has_matching_tags(lines: list[str]):
 
 
 def all_content_within_tags(raw: str):
+    """Asserts the following assumption(s):
+    - All content/text lines are situated within content tags
+    """
+
     def replace_with_blank_lines(match):
         text = match.group(0)
         return "\n" * text.count("\n")
@@ -187,13 +240,19 @@ def all_content_within_tags(raw: str):
 
 
 def all_blank_pages_within_tags(lines: list[str]):
+    """Asserts the following assumption(s):
+    - Blank pages are enclosed in the approriate tag
+    """
     all_within_tags = True
 
     for n, line in enumerate(lines):
         if not line == "#pagebreak()":
             continue
-        if not lines[n - 2].startswith("// < ") and lines[n + 2].startswith("// </"):
-            add_issue(n, line, "Blank page not withing approriate tags")
+        if not lines[n - 2] == f"// < {BLANK_PAGE_TAG} >":
+            add_issue(n, line, "No opening BLANK-PAGE tag")
+            all_within_tags = False
+        if not lines[n + 2] == f"// </ {BLANK_PAGE_TAG} >":
+            add_issue(n, line, "No closing BLANK-PAGE tag")
             all_within_tags = False
 
     if all_within_tags:
@@ -201,6 +260,15 @@ def all_blank_pages_within_tags(lines: list[str]):
 
 
 def has_agreeing_metadata(raw: str):
+    """Asserts the following assumption(s):
+    - The metadata includes the work's title
+    - The metadata includes the work's author
+    - The metadata includes the work's year of publication
+    - The PDF metadata includes the work's title
+    - The PDF metadata includes the work's author
+    - The PDF metadata includes the work's year of publication
+    - File and PDF metadata are in agreement
+    """
     metadata_agrees = True
 
     try:
@@ -208,35 +276,35 @@ def has_agreeing_metadata(raw: str):
     except IndexError:
         file_title = ""
         metadata_agrees = False
-        add_issue(0, "", "NO TITLE SET IN METADATA")
+        add_issue(0, "", "No title set in metadata")
 
     try:
         file_author = re.findall(r"// Author:  (.+)$", raw, flags=re.MULTILINE)[0]
     except IndexError:
         file_author = ""
         metadata_agrees = False
-        add_issue(0, "", "NO AUTHOR SET IN METADATA")
+        add_issue(0, "", "No author set in metadata")
 
     try:
         file_date = re.findall(r"// Date:    (.+)$", raw, flags=re.MULTILINE)[0]
     except IndexError:
         file_date = ""
         metadata_agrees = False
-        add_issue(0, "", "NO DATE SET IN METADATA")
+        add_issue(0, "", "No date set in metadata")
 
     try:
         pdf_title = re.findall(r"#set document\(title: \[(.+)\]\)", raw)[0]
     except IndexError:
         pdf_title = ""
         metadata_agrees = False
-        add_issue(0, "", "NO TITLE SET FOR PDF")
+        add_issue(0, "", "No title set for PDF")
 
     try:
         pdf_author = re.findall(r"#set document\(author: \"(.+)\"\)", raw)[0]
     except IndexError:
         pdf_author = ""
         metadata_agrees = False
-        add_issue(0, "", "NO AUTHOR SET FOR PDF")
+        add_issue(0, "", "No author set for PDF")
 
     try:
         pdf_date = re.findall(
@@ -245,20 +313,23 @@ def has_agreeing_metadata(raw: str):
     except IndexError:
         pdf_date = ""
         metadata_agrees = False
-        add_issue(0, "", "NO DATE SET FOR PDF")
+        add_issue(0, "", "No date set for PDF")
 
     if not file_title == pdf_title:
         metadata_agrees = False
-        add_issue(0, "", "PDF TITLE AND METADATA TITLE DO NOT AGREE")
+        add_issue(0, "", "PDF title and metadata title do not agree")
     if not file_author == pdf_author:
         metadata_agrees = False
-        add_issue(0, "", "PDF AUTHOR AND METADATA AUTHOR DO NOT AGREE")
+        add_issue(0, "", "PDF author and metadata author do not agree")
     if not file_date == pdf_date:
         metadata_agrees = False
-        add_issue(0, "", "PDF DATE AND METADATA DATE DO NOT AGREE")
+        add_issue(0, "", "PDF date and metadata date do not agree")
 
     if metadata_agrees:
         add_nonissue("All metadata is set properly")
+
+
+# === Output ===
 
 
 def print_verdict():
@@ -273,15 +344,16 @@ def print_verdict():
 
 
 # TODO: Accept arguments
+# TODO: Test if only official tags are used
 if __name__ == "__main__":
     path = "./1845_Giese/1883_Mönsterske_Chronika/1883_Mönsterske_Chronika_ut_ollen_un_nieen_Tiden.typ"
-    path = "./1862_Wibbelt/1910_De_Iärfschopp/1910_De_Iärfschopp_3_Auflage.typ"
+    # path = "./1862_Wibbelt/1910_De_Iärfschopp/1910_De_Iärfschopp_3_Auflage.typ"
     with open(path, "r") as f:
         content = f.read()
     lines = content.split("\n")
 
     has_license(content)
-    has_tailing_whitespace(lines)
+    has_trailing_whitespace(lines)
     has_matching_tags(lines)
     all_blank_pages_within_tags(lines)
     all_content_within_tags(content)
