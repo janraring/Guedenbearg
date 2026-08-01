@@ -4,13 +4,23 @@ import regex as re
 
 # === Tags used in transcriptions ===
 
-METADATA_TAG = "META DATA"
-TYPST_SETTING_TAG = "TYPST SETTING"
+METADATA_TAG = "METADATA"
+TYPST_SETTING_TAG = "TYPST SETTINGS"
 BLANK_PAGE_TAG = "BLANK PAGE"
 TITLE_PAGE_TAG = "TITLE PAGE"
 FRONT_MATTER_TAG = "FRONT MATTER"
 MAIN_MATTER_TAG = "MAIN MATTER"
 BACK_MATTER_TAG = "BACK MATTER"
+
+TAGS = [
+    METADATA_TAG,
+    TYPST_SETTING_TAG,
+    BLANK_PAGE_TAG,
+    TITLE_PAGE_TAG,
+    FRONT_MATTER_TAG,
+    MAIN_MATTER_TAG,
+    BACK_MATTER_TAG,
+]
 
 
 # === Lists for issues and non-issues ===
@@ -171,7 +181,30 @@ def has_valid_spacing(lines: list[str]):
     if valid_lines:
         add_nonissue("All lines have a valid format")
     if valid_spacing:
-        add_nonissue("The entire document has valid spacing")
+        add_nonissue("All spacing is valid")
+
+
+def only_uses_valid_tags(raw: str):
+    """Asserts the following assumption(s):
+    - The only tags being used are the ones listed above
+      and the document title
+    """
+    try:
+        title = re.findall(r"// Title:   (.+)$", raw, flags=re.MULTILINE)[0]
+    except IndexError:
+        title = ""
+
+    lines = raw.split("\n")
+    tags_valid = True
+    for n, line in enumerate(lines):
+        if not line.startswith("// < "):
+            continue
+        tag = re.findall(r"// < (.+?) >", line)[0]
+        if tag not in TAGS + [title.upper()]:
+            add_issue(n, line, "Unknown tag")
+            tags_valid = False
+    if tags_valid:
+        add_nonissue("All tags are valid")
 
 
 def has_matching_tags(lines: list[str]):
@@ -344,7 +377,6 @@ def print_verdict():
 
 
 # TODO: Accept arguments
-# TODO: Test if only official tags are used
 if __name__ == "__main__":
     path = "./1845_Giese/1883_Mönsterske_Chronika/1883_Mönsterske_Chronika_ut_ollen_un_nieen_Tiden.typ"
     # path = "./1862_Wibbelt/1910_De_Iärfschopp/1910_De_Iärfschopp_3_Auflage.typ"
@@ -356,6 +388,7 @@ if __name__ == "__main__":
     has_trailing_whitespace(lines)
     has_matching_tags(lines)
     all_blank_pages_within_tags(lines)
+    only_uses_valid_tags(content)
     all_content_within_tags(content)
     has_valid_spacing(lines)
     has_agreeing_metadata(content)
