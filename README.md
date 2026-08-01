@@ -203,7 +203,7 @@ Sollten Ihnen derartige Fehler auffallen, freue ich mich über Nachberichtigung 
 ---
 
 
-# Changelog
+## Changelog
 - **2026-08-01** Defined new format specifications and added a script for validating files against them.
 - **2026-04-14** Release of »De Iärfschopp«.
 - **2026-04-13** Release of »Mönsterske Chronika ut ollen un nieen Tiden«.
