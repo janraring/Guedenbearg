@@ -5,10 +5,8 @@ from typing import NamedTuple
 
 import regex as re
 
-# === Tags used in transcriptions ===
-
 METADATA_TAG = "METADATA"
-TYPST_SETTING_TAG = "TYPST SETTINGS"
+TYPST_SETTINGS_TAG = "TYPST SETTINGS"
 BLANK_PAGE_TAG = "BLANK PAGE"
 TITLE_PAGE_TAG = "TITLE PAGE"
 FRONT_MATTER_TAG = "FRONT MATTER"
@@ -17,7 +15,7 @@ BACK_MATTER_TAG = "BACK MATTER"
 
 TAGS = [
     METADATA_TAG,
-    TYPST_SETTING_TAG,
+    TYPST_SETTINGS_TAG,
     BLANK_PAGE_TAG,
     TITLE_PAGE_TAG,
     FRONT_MATTER_TAG,
@@ -26,7 +24,50 @@ TAGS = [
 ]
 
 
-# === Lists for issues and non-issues ===
+def main():
+    paths: list[str] | list[Path] = []
+
+    if len(sys.argv) > 1:
+        paths = sys.argv[1:]
+    else:
+        repo_root = Path(__file__).resolve().parents[1]
+        paths = list(repo_root.rglob("*.typ"))
+
+    for path in paths:
+        try:
+            if not isinstance(path, Path):
+                path = Path(path)
+            with open(path, "r") as f:
+                content = f.read()
+        except FileNotFoundError:
+            print(f"No file found under {path}")
+            continue
+
+        print(f"\n    📜 {path.name}\n")
+        validate_file(content)
+
+
+def validate_file(content: str):
+    global ISSUES
+    global NON_ISSUES
+    ISSUES = []
+    NON_ISSUES = []
+
+    lines = content.split("\n")
+
+    has_license(content)
+    has_agreeing_metadata(content)
+    only_uses_valid_tags(content)
+    has_matching_tags(lines)
+    all_content_within_tags(content)
+    all_blank_pages_within_tags(lines)
+    has_trailing_whitespace(lines)
+    has_valid_spacing(lines)
+
+    print_verdict()
+
+
+# === Utilities for collecting messages ===
 
 
 class Issue(NamedTuple):
@@ -39,16 +80,23 @@ class NonIssue(NamedTuple):
     msg: str
 
 
-ISSUES: list[Issue] = []
-NON_ISSUES: list[NonIssue] = []
-
-
 def add_issue(line_number, line_text, msg):
     ISSUES.append(Issue(line_number, line_text, msg))
 
 
 def add_nonissue(msg):
     NON_ISSUES.append(NonIssue(msg))
+
+
+def print_verdict():
+    for non_issue in NON_ISSUES:
+        print(f"✅ {non_issue.msg}")
+    if ISSUES:
+        print(f"{len(ISSUES)} issues:")
+    for issue in ISSUES:
+        print(
+            f"  ⚠️ {issue.msg.upper()} in line {issue.line_number + 1}: {issue.line_text}"
+        )
 
 
 # === Tests ===
@@ -76,6 +124,192 @@ def has_license(raw: str):
         add_issue(0, "", "License formatting seems to be off")
     else:
         add_nonissue("The document appears to have an up to date license")
+
+
+def has_agreeing_metadata(raw: str):
+    """Asserts the following assumption(s):
+    - The metadata includes the work's title
+    - The metadata includes the work's author
+    - The metadata includes the work's year of publication
+    - The PDF metadata includes the work's title
+    - The PDF metadata includes the work's author
+    - The PDF metadata includes the work's year of publication
+    - File and PDF metadata are in agreement
+    """
+    metadata_agrees = True
+
+    try:
+        file_title = re.findall(r"// Title:   (.+)$", raw, flags=re.MULTILINE)[0]
+    except IndexError:
+        file_title = ""
+        metadata_agrees = False
+        add_issue(0, "", "No title set in metadata")
+
+    try:
+        file_author = re.findall(r"// Author:  (.+)$", raw, flags=re.MULTILINE)[0]
+    except IndexError:
+        file_author = ""
+        metadata_agrees = False
+        add_issue(0, "", "No author set in metadata")
+
+    try:
+        file_date = re.findall(r"// Date:    (.+)$", raw, flags=re.MULTILINE)[0]
+    except IndexError:
+        file_date = ""
+        metadata_agrees = False
+        add_issue(0, "", "No date set in metadata")
+
+    try:
+        pdf_title = re.findall(r"#set document\(title: \[(.+)\]\)", raw)[0]
+    except IndexError:
+        pdf_title = ""
+        metadata_agrees = False
+        add_issue(0, "", "No title set for PDF")
+
+    try:
+        pdf_author = re.findall(r"#set document\(author: \"(.+)\"\)", raw)[0]
+    except IndexError:
+        pdf_author = ""
+        metadata_agrees = False
+        add_issue(0, "", "No author set for PDF")
+
+    try:
+        pdf_date = re.findall(
+            r"#set document\(date: datetime\(year: (\d+), month: \d+, day: \d+\)\)", raw
+        )[0]
+    except IndexError:
+        pdf_date = ""
+        metadata_agrees = False
+        add_issue(0, "", "No date set for PDF")
+
+    if not file_title == pdf_title:
+        metadata_agrees = False
+        add_issue(0, "", "PDF title and metadata title do not agree")
+    if not file_author == pdf_author:
+        metadata_agrees = False
+        add_issue(0, "", "PDF author and metadata author do not agree")
+    if not file_date == pdf_date:
+        metadata_agrees = False
+        add_issue(0, "", "PDF date and metadata date do not agree")
+
+    if metadata_agrees:
+        add_nonissue("All metadata is set properly")
+
+
+def only_uses_valid_tags(raw: str):
+    """Asserts the following assumption(s):
+    - The only tags being used are the ones listed above
+      and the document title
+    """
+    try:
+        title = re.findall(r"// Title:   (.+)$", raw, flags=re.MULTILINE)[0]
+    except IndexError:
+        title = ""
+
+    lines = raw.split("\n")
+    tags_valid = True
+    for n, line in enumerate(lines):
+        if not line.startswith("// < "):
+            continue
+        tag = re.findall(r"// < (.+?) >", line)[0]
+        if tag not in TAGS + [title.upper()]:
+            add_issue(n, line, "Unknown tag")
+            tags_valid = False
+    if tags_valid:
+        add_nonissue("All tags are valid")
+
+
+def has_matching_tags(lines: list[str]):
+    """Asserts the following assumption(s):
+    - Every opening tag has a matching closing tag
+    - The spans are nested, i.e. they do not cross
+    """
+    stack = []
+
+    tags_match = True
+
+    for n, line in enumerate(lines):
+        if line.startswith("// < "):
+            tags = re.findall(r"// < (.+?) >", line)[0]
+            if len(tags) == 0:
+                add_issue(n, line, "Malformed tag")
+                continue
+            stack.append(tags[0])
+        elif line.startswith("// </"):
+            tags = re.findall(r"// </ (.+?) >", line)
+            if len(tags) == 0:
+                add_issue(n, line, "Malformed tag")
+                continue
+            if not stack:
+                add_issue(n, line, f"Unexpected closing tag </ {tags[0]}>")
+            elif tags[0] == stack[-1]:
+                stack.pop()
+            else:
+                add_issue(n, line, f"Expected < {stack[-1]} > to get closed first")
+                tags_match = False
+
+    if len(stack) != 0:
+        tags_match = False
+
+    if tags_match:
+        add_nonissue("All tags are being closed")
+
+
+def all_content_within_tags(raw: str):
+    """Asserts the following assumption(s):
+    - All content/text lines are situated within content tags
+    """
+
+    def replace_with_blank_lines(match):
+        text = match.group(0)
+        return "\n" * text.count("\n")
+
+    content_within_tags = True
+
+    for tag in (
+        TITLE_PAGE_TAG,
+        FRONT_MATTER_TAG,
+        MAIN_MATTER_TAG,
+        BACK_MATTER_TAG,
+        BLANK_PAGE_TAG,
+    ):
+        raw = re.sub(
+            rf"// < {tag} >.+?// </ {tag} >",
+            replace_with_blank_lines,
+            raw,
+            flags=re.DOTALL,
+        )
+
+    lines = raw.split("\n")
+    for n, line in enumerate(lines):
+        if line == "":
+            continue
+        if line.endswith("\\") or line.endswith("#pagebreak()"):
+            add_issue(n, line, "Unexpected line outside of content tags")
+            content_within_tags = False
+
+    if content_within_tags:
+        add_nonissue("All content lines are enclosed in content tags")
+
+
+def all_blank_pages_within_tags(lines: list[str]):
+    """Asserts the following assumption(s):
+    - Blank pages are enclosed in the appropriate tag
+    """
+    all_within_tags = True
+
+    for n, line in enumerate(lines):
+        if not line == "#pagebreak()":
+            continue
+        if n < 2 or lines[n - 2] != f"// < {BLANK_PAGE_TAG} >":
+            add_issue(n, line, "No opening BLANK-PAGE tag")
+            all_within_tags = False
+        if n >= len(lines) or lines[n + 2] != f"// </ {BLANK_PAGE_TAG} >":
+            add_issue(n, line, "No closing BLANK-PAGE tag")
+            all_within_tags = False
+
+    if all_within_tags:
+        add_nonissue("All blank pages are within appropriate tags")
 
 
 def has_trailing_whitespace(lines: list[str]):
@@ -185,241 +419,6 @@ def has_valid_spacing(lines: list[str]):
         add_nonissue("All lines have a valid format")
     if valid_spacing:
         add_nonissue("All spacing is valid")
-
-
-def only_uses_valid_tags(raw: str):
-    """Asserts the following assumption(s):
-    - The only tags being used are the ones listed above
-      and the document title
-    """
-    try:
-        title = re.findall(r"// Title:   (.+)$", raw, flags=re.MULTILINE)[0]
-    except IndexError:
-        title = ""
-
-    lines = raw.split("\n")
-    tags_valid = True
-    for n, line in enumerate(lines):
-        if not line.startswith("// < "):
-            continue
-        tag = re.findall(r"// < (.+?) >", line)[0]
-        if tag not in TAGS + [title.upper()]:
-            add_issue(n, line, "Unknown tag")
-            tags_valid = False
-    if tags_valid:
-        add_nonissue("All tags are valid")
-
-
-def has_matching_tags(lines: list[str]):
-    """Asserts the following assumption(s):
-    - Every opening tag has a matching closing tag
-    - The spans are nested, i.e. they do not cross
-    """
-    stack = []
-
-    tags_match = True
-
-    for n, line in enumerate(lines):
-        if line.startswith("// < "):
-            tag = re.findall(r"// < (.+?) >", line)[0]
-            stack.append(tag)
-        elif line.startswith("// </"):
-            tag = re.findall(r"// </ (.+?) >", line)[0]
-            if tag == stack[-1]:
-                stack.pop()
-            else:
-                add_issue(n, line, f"Expected < {stack[-1]} > to get closed first")
-                tags_match = False
-
-    if len(stack) != 0:
-        tags_match = False
-
-    if tags_match:
-        add_nonissue("All tags are being closed")
-
-
-def all_content_within_tags(raw: str):
-    """Asserts the following assumption(s):
-    - All content/text lines are situated within content tags
-    """
-
-    def replace_with_blank_lines(match):
-        text = match.group(0)
-        return "\n" * text.count("\n")
-
-    all_content_within_tags = True
-
-    for tag in (
-        TITLE_PAGE_TAG,
-        FRONT_MATTER_TAG,
-        MAIN_MATTER_TAG,
-        BACK_MATTER_TAG,
-        BLANK_PAGE_TAG,
-    ):
-        raw = re.sub(
-            rf"// < {tag} >.+?// </ {tag} >",
-            replace_with_blank_lines,
-            raw,
-            flags=re.DOTALL,
-        )
-
-    lines = raw.split("\n")
-    for n, line in enumerate(lines):
-        if line == "":
-            continue
-        if line.endswith("\\") or line.endswith("#pagebreak()"):
-            add_issue(n, line, "Unexpected line outside of content tags")
-            all_content_within_tags = False
-
-    if all_content_within_tags:
-        add_nonissue("All context lines are enclosed in content tags")
-
-
-def all_blank_pages_within_tags(lines: list[str]):
-    """Asserts the following assumption(s):
-    - Blank pages are enclosed in the approriate tag
-    """
-    all_within_tags = True
-
-    for n, line in enumerate(lines):
-        if not line == "#pagebreak()":
-            continue
-        if not lines[n - 2] == f"// < {BLANK_PAGE_TAG} >":
-            add_issue(n, line, "No opening BLANK-PAGE tag")
-            all_within_tags = False
-        if not lines[n + 2] == f"// </ {BLANK_PAGE_TAG} >":
-            add_issue(n, line, "No closing BLANK-PAGE tag")
-            all_within_tags = False
-
-    if all_within_tags:
-        add_nonissue("All blank pages are within approriate tags")
-
-
-def has_agreeing_metadata(raw: str):
-    """Asserts the following assumption(s):
-    - The metadata includes the work's title
-    - The metadata includes the work's author
-    - The metadata includes the work's year of publication
-    - The PDF metadata includes the work's title
-    - The PDF metadata includes the work's author
-    - The PDF metadata includes the work's year of publication
-    - File and PDF metadata are in agreement
-    """
-    metadata_agrees = True
-
-    try:
-        file_title = re.findall(r"// Title:   (.+)$", raw, flags=re.MULTILINE)[0]
-    except IndexError:
-        file_title = ""
-        metadata_agrees = False
-        add_issue(0, "", "No title set in metadata")
-
-    try:
-        file_author = re.findall(r"// Author:  (.+)$", raw, flags=re.MULTILINE)[0]
-    except IndexError:
-        file_author = ""
-        metadata_agrees = False
-        add_issue(0, "", "No author set in metadata")
-
-    try:
-        file_date = re.findall(r"// Date:    (.+)$", raw, flags=re.MULTILINE)[0]
-    except IndexError:
-        file_date = ""
-        metadata_agrees = False
-        add_issue(0, "", "No date set in metadata")
-
-    try:
-        pdf_title = re.findall(r"#set document\(title: \[(.+)\]\)", raw)[0]
-    except IndexError:
-        pdf_title = ""
-        metadata_agrees = False
-        add_issue(0, "", "No title set for PDF")
-
-    try:
-        pdf_author = re.findall(r"#set document\(author: \"(.+)\"\)", raw)[0]
-    except IndexError:
-        pdf_author = ""
-        metadata_agrees = False
-        add_issue(0, "", "No author set for PDF")
-
-    try:
-        pdf_date = re.findall(
-            r"#set document\(date: datetime\(year: (\d+), month: \d+, day: \d+\)\)", raw
-        )[0]
-    except IndexError:
-        pdf_date = ""
-        metadata_agrees = False
-        add_issue(0, "", "No date set for PDF")
-
-    if not file_title == pdf_title:
-        metadata_agrees = False
-        add_issue(0, "", "PDF title and metadata title do not agree")
-    if not file_author == pdf_author:
-        metadata_agrees = False
-        add_issue(0, "", "PDF author and metadata author do not agree")
-    if not file_date == pdf_date:
-        metadata_agrees = False
-        add_issue(0, "", "PDF date and metadata date do not agree")
-
-    if metadata_agrees:
-        add_nonissue("All metadata is set properly")
-
-
-# === Output ===
-
-
-def print_verdict():
-    for non_issue in NON_ISSUES:
-        print(f"✅ {non_issue.msg}")
-    if ISSUES:
-        print(f"{len(ISSUES)} issues:")
-    for issue in ISSUES:
-        print(
-            f"  ⚠️ {issue.msg.upper()} in line {issue.line_number + 1}: {issue.line_text}"
-        )
-
-
-def validate_file(content: str):
-    global ISSUES
-    global NON_ISSUES
-    ISSUES = []
-    NON_ISSUES = []
-
-    lines = content.split("\n")
-
-    has_license(content)
-    has_trailing_whitespace(lines)
-    has_matching_tags(lines)
-    all_blank_pages_within_tags(lines)
-    only_uses_valid_tags(content)
-    all_content_within_tags(content)
-    has_valid_spacing(lines)
-    has_agreeing_metadata(content)
-
-    print_verdict()
-
-
-def main():
-    paths: list[str] | list[Path] = []
-
-    if len(sys.argv) > 1:
-        paths = sys.argv[1:]
-    else:
-        repo_root = Path(__file__).resolve().parents[1]
-        paths = list(repo_root.rglob("*.typ"))
-
-    for path in paths:
-        try:
-            if not isinstance(path, Path):
-                path = Path(path)
-            with open(path, "r") as f:
-                content = f.read()
-        except FileNotFoundError:
-            print(f"No file found under {path}")
-            continue
-
-        print(f"\n    📜 {path.name}\n")
-        validate_file(content)
 
 
 if __name__ == "__main__":
