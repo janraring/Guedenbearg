@@ -1,9 +1,9 @@
-# Guedenbearg ([English](#english)|[Deutsch](#deutsch))
+# Guedenbearg ([English](#introduction)|[Deutsch](#einführung))
 
 Free digitizations of Westphalian Low German works.
 
 
-## English
+## Introduction
 For various reasons, I am interested in the digitization of Westphalian Low German texts. Over time, I have accumulated a number of such digitizations, most of them manually transcribed. To spare others this effort—and in the hope of contributing to the dissemination of these texts and the development of language technology—I have decided to publish the results here.
 
 
@@ -105,7 +105,7 @@ If you notice any issues, corrections and notifications are very welcome.
 Freie Digitalisate westfälisch-niederdeutscher Werke.
 
 
-## Deutsch
+## Einführung
 Aus vielerlei Gründen bin ich an der Digitalisierung westfälisch-niederdeutscher Texte interessiert. Mit der Zeit haben sich bei mir einige dieser Digitalisate angesammelt; die meisten davon händisch abgetippt. Um anderen diese Arbeit zu ersparen und in der Hoffnung, damit einen Beitrag zur Verbreitung der Texte und zur Entwicklung von Sprachtechnologie leisten zu können, habe ich mich entschieden, die Ergebnisse hier zu veröffentlichen.
 
 
@@ -203,7 +203,7 @@ Sollten Ihnen derartige Fehler auffallen, freue ich mich über Nachberichtigung 
 ---
 
 
-## Changelog
+# Changelog
 - **2026-08-01** Defined new format specifications and added a script for validating files against them.
 - **2026-04-14** Release of »De Iärfschopp«.
 - **2026-04-13** Release of »Mönsterske Chronika ut ollen un nieen Tiden«.
