@@ -1,5 +1,8 @@
+import sys
 from datetime import date
+from pathlib import Path
 from typing import NamedTuple
+
 import regex as re
 
 # === Tags used in transcriptions ===
@@ -376,12 +379,12 @@ def print_verdict():
         )
 
 
-# TODO: Accept arguments
-if __name__ == "__main__":
-    path = "./1845_Giese/1883_Mönsterske_Chronika/1883_Mönsterske_Chronika_ut_ollen_un_nieen_Tiden.typ"
-    # path = "./1862_Wibbelt/1910_De_Iärfschopp/1910_De_Iärfschopp_3_Auflage.typ"
-    with open(path, "r") as f:
-        content = f.read()
+def validate_file(content: str):
+    global ISSUES
+    global NON_ISSUES
+    ISSUES = []
+    NON_ISSUES = []
+
     lines = content.split("\n")
 
     has_license(content)
@@ -394,3 +397,30 @@ if __name__ == "__main__":
     has_agreeing_metadata(content)
 
     print_verdict()
+
+
+def main():
+    paths: list[str] | list[Path] = []
+
+    if len(sys.argv) > 1:
+        paths = sys.argv[1:]
+    else:
+        repo_root = Path(__file__).resolve().parents[1]
+        paths = list(repo_root.rglob("*.typ"))
+
+    for path in paths:
+        try:
+            if not isinstance(path, Path):
+                path = Path(path)
+            with open(path, "r") as f:
+                content = f.read()
+        except FileNotFoundError:
+            print(f"No file found under {path}")
+            continue
+
+        print(f"\n    📜 {path.name}\n")
+        validate_file(content)
+
+
+if __name__ == "__main__":
+    main()
