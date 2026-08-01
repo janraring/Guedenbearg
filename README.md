@@ -1,10 +1,6 @@
-# Guedenbearg
-Free digitizations of Westphalian Low German works. → [English](#english)
+# Guedenbearg ([English](#english)|[Deutsch](#deutsch))
 
-Freie Digitalisate westfälisch-niederdeutscher Werke. → [Deutsch](#deutsch)
-
-
----
+Free digitizations of Westphalian Low German works.
 
 
 ## English
@@ -45,17 +41,19 @@ If you notice any issues, corrections and notifications are very welcome.
 
 ### Annotation Scheme
 
-#### Dokument Structure
+#### Document Structure
 - Every line of content must end with either:
   - `\` (line break), or
   - `#pagebreak()` (page break).
-- Paragraphs are seperated by exaclty one blank line.\ Each blank line denotes a new paragraph.
+- Paragraphs are separated by exactly one blank line.\ Each blank line denotes a new paragraph.
 - A blank line is inserted between pages *if and only if* the page break coincides with a paragraph boundary.
 - Blank pages are encoded as:
   ```typst
-  /* Blank page */
+  // < BLANK PAGE >
 
   #pagebreak()
+
+  // </ BLANK PAGE >
   ```
 
 #### Headings and Layout
@@ -100,6 +98,11 @@ If you notice any issues, corrections and notifications are very welcome.
 
 
 ---
+
+
+# Guedenbearg ([English](#english)|[Deutsch](#deutsch))
+
+Freie Digitalisate westfälisch-niederdeutscher Werke.
 
 
 ## Deutsch
@@ -149,9 +152,11 @@ Sollten Ihnen derartige Fehler auffallen, freue ich mich über Nachberichtigung 
 - Zwischen Seiten wird genau dann eine Leerzeile eingefügt, wenn der Seitenumbruch mit einer Absatzgrenze zusammenfällt.
 - Leere Seiten werden wie folgt kodiert:
   ```typst
-  /* Blank page */
+  // < BLANK PAGE >
 
   #pagebreak()
+
+  // </ BLANK PAGE >
   ```
 
 #### Überschriften und Layout
@@ -199,6 +204,7 @@ Sollten Ihnen derartige Fehler auffallen, freue ich mich über Nachberichtigung 
 
 
 ## Changelog
-- **2026-04-12** Release of »Dat veerte Gebott«
-- **2026-04-13** Release of »Mönsterske Chronika ut ollen un nieen Tiden«
-- **2026-04-14** Releas of »De Iärfschopp«
+- **2026-08-01** Defined new format specifications and added a script for validating files against them.
+- **2026-04-14** Release of »De Iärfschopp«.
+- **2026-04-13** Release of »Mönsterske Chronika ut ollen un nieen Tiden«.
+- **2026-04-12** Release of »Dat veerte Gebott«.
