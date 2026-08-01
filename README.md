@@ -1,13 +1,9 @@
-# Guedenbearg
-Free digitizations of Westphalian Low German works. → [English](#english)
+# Guedenbearg ([English](#introduction)|[Deutsch](#einführung))
 
-Freie Digitalisate westfälisch-niederdeutscher Werke. → [Deutsch](#deutsch)
-
-
----
+Free digitizations of Westphalian Low German works.
 
 
-## English
+## Introduction
 For various reasons, I am interested in the digitization of Westphalian Low German texts. Over time, I have accumulated a number of such digitizations, most of them manually transcribed. To spare others this effort—and in the hope of contributing to the dissemination of these texts and the development of language technology—I have decided to publish the results here.
 
 
@@ -45,17 +41,19 @@ If you notice any issues, corrections and notifications are very welcome.
 
 ### Annotation Scheme
 
-#### Dokument Structure
+#### Document Structure
 - Every line of content must end with either:
   - `\` (line break), or
   - `#pagebreak()` (page break).
-- Paragraphs are seperated by exaclty one blank line.\ Each blank line denotes a new paragraph.
+- Paragraphs are separated by exactly one blank line.\ Each blank line denotes a new paragraph.
 - A blank line is inserted between pages *if and only if* the page break coincides with a paragraph boundary.
 - Blank pages are encoded as:
   ```typst
-  /* Blank page */
+  // < BLANK PAGE >
 
   #pagebreak()
+
+  // </ BLANK PAGE >
   ```
 
 #### Headings and Layout
@@ -102,7 +100,12 @@ If you notice any issues, corrections and notifications are very welcome.
 ---
 
 
-## Deutsch
+# Guedenbearg ([English](#english)|[Deutsch](#deutsch))
+
+Freie Digitalisate westfälisch-niederdeutscher Werke.
+
+
+## Einführung
 Aus vielerlei Gründen bin ich an der Digitalisierung westfälisch-niederdeutscher Texte interessiert. Mit der Zeit haben sich bei mir einige dieser Digitalisate angesammelt; die meisten davon händisch abgetippt. Um anderen diese Arbeit zu ersparen und in der Hoffnung, damit einen Beitrag zur Verbreitung der Texte und zur Entwicklung von Sprachtechnologie leisten zu können, habe ich mich entschieden, die Ergebnisse hier zu veröffentlichen.
 
 
@@ -149,9 +152,11 @@ Sollten Ihnen derartige Fehler auffallen, freue ich mich über Nachberichtigung 
 - Zwischen Seiten wird genau dann eine Leerzeile eingefügt, wenn der Seitenumbruch mit einer Absatzgrenze zusammenfällt.
 - Leere Seiten werden wie folgt kodiert:
   ```typst
-  /* Blank page */
+  // < BLANK PAGE >
 
   #pagebreak()
+
+  // </ BLANK PAGE >
   ```
 
 #### Überschriften und Layout
@@ -199,6 +204,7 @@ Sollten Ihnen derartige Fehler auffallen, freue ich mich über Nachberichtigung 
 
 
 ## Changelog
-- **2026-04-12** Release of »Dat veerte Gebott«
-- **2026-04-13** Release of »Mönsterske Chronika ut ollen un nieen Tiden«
-- **2026-04-14** Releas of »De Iärfschopp«
+- **2026-08-01** Defined new format specifications and added a script for validating files against them.
+- **2026-04-14** Release of »De Iärfschopp«.
+- **2026-04-13** Release of »Mönsterske Chronika ut ollen un nieen Tiden«.
+- **2026-04-12** Release of »Dat veerte Gebott«.
