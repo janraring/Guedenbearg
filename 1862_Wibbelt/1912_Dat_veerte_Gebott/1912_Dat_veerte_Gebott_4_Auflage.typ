@@ -16,9 +16,10 @@
 /********************************************************/
 
 
-// === METADATA ===
 
-// Title:   Dat veerte Gebott; Erzählung in Münsterländer Mundart
+// < METADATA >
+
+// Title:   Dat veerte Gebott
 // Author:  Augustin Wibbelt
 // Date:    1912
 // Edition: 4th (1925)
@@ -27,52 +28,77 @@
 // Work exhibition:  https://augustinwibbelt.de/wp-content/uploads/2022/02/21_c.jpg
 //
 // Released:      2026-04-12
-// Latest update: 2026-04-13
+// Latest update: 2026-08-02
 //
 // Editorial process:
 //   1) Manual transcription (no markup; removed hyphens and page breaks).
 //   2) Comparison and correction against an OCR transcription.
 //   3) Added markup and re-inserted hyphens and page breaks.
 //   4) Added all Footnotes.
+//
+// Editorial Notes:
+//   - Some typos may have gotten corrected silently.
 
-
-// === MARKUP AND DEBUGGING ===
-
-#set document(title: [Dat veerte Gebott])          // Sets document title
-#set document(author: "Augustin Wibbelt")          // Sets document author
-#set page(numbering: "1")                          // Turns on page numbering
-#set page(header: counter(footnote).update(0))     // Resets footnote counter on every page
-
-#set quote(block: true)                            // Turns on block quotes
-#let gesperrt(body) = text(tracking: 0.1em, body)  // For letter-spaced text
-#let antiqua(body) = text(font: "Noto Sans", size: .85em, body)  // For text set in antiqua
-#let typo(body, correction) = text([#body#super[#highlight(fill: silver)[[#correction]]]])  // For marking typos
-
-#show "\u{00AD}": "-"                              // Displays all soft hyphens
+// </ METADATA >
 
 
 
+// < TYPST SETTINGS >
 
-// --------------------------------
-// BEGINNING OF »DAT VEERTE GEBOTT«
-// --------------------------------
+// PDF metadata
+#set document(title: [Dat veerte Gebott])
+#set document(author: "Augustin Wibbelt")
+#set document(date: datetime(year: 1912, month: 1, day: 1))
+
+// Custom markup
+#let gesperrt(body) = text(tracking: 0.1em, body)
+#let antiqua(body) = text(font: "Noto Sans", size: .85em, body)
+#let typo(body, correction) = text([#body#super[#highlight(fill: silver)[[#correction]]]])
+
+// Display settings
+#show "\u{00AD}": "-"
+#show "***": [#h(1cm) \* #h(1cm) \* #h(1cm) \*]
+
+// </ TYPST SETTINGS >
 
 
 
+// < DAT VEERTE GEBOTT >
 
-// === TITLE PAGE ===
+
+
+// < TYPST SETTINGS >
+
+// Turns on block quotes
+#set quote(block: true)
+
+// Turns on page numbering
+#set page(numbering: "1")
+
+// Resets footnote counter on every page
+#set page(header: counter(footnote).update(0))
+
+// </ TYPST SETTINGS >
+
+
+
+// < TITLE PAGE >
 
 Dat veerte Gebott#pagebreak()
 
+// </ TITLE PAGE >
 
-/* Blank page */
 
+
+// < BLANK PAGE >
 
 #pagebreak()
 
+// </ BLANK PAGE >
 
 
-// === FRONT MATTER ===
+
+// < FRONT MATTER >
 
 Augustin Wibbelt\
 
@@ -80,15 +106,17 @@ Dat Veerte Gebott\
 
 Erzählung in Münsterländer Mundart\
 
-4. Auflage\
+\4. Auflage\
 
 Verlag von Fredebeul & Koenen, Essen (Ruhr).#pagebreak()
 
 
-/* Blank page */
 
+// < BLANK PAGE >
 
 #pagebreak()
+
+// </ BLANK PAGE >
 
 
 
@@ -118,15 +146,19 @@ XVIII. Doppelkümmel . . . . . . . . . . . . . 277\
   XXI. De Schell will nich swiegen  . . . . . . . . 218\
  XXII. Daudenlüden un Sunndagsklocken . . . . . . 332#pagebreak()
 
+// </ FRONT MATTER >
 
-/* Blank page */
 
+
+// < BLANK PAGE >
 
 #pagebreak()
 
+// </ BLANK PAGE >
 
 
-// === MAIN MATTER ===
+
+// < MAIN MATTER >
 
 
 
@@ -8850,8 +8882,8 @@ mi erst ümkiecken.“\
 
 Se lachede em ut.\
 
-„Ick mein, du möks di nicks ut Suckerklümpkes,
-Wilm!“
+„Ick mein, du möks di nicks ut Suckerklümpkes,\
+Wilm!“\
 
 „Du Bästken#footnote[scherzhafter Schimpfname, vielleicht von Beest gebildet]! Nu mott ick laupen. An\
 Vader denks du doch — un an de Iättley!“\
@@ -9812,16 +9844,16 @@ sine Snäpskes todeelen.“\
 „Dat is ganz eenerlei. Laot en schimpen,#pagebreak()
 soviell, äs he will, tüh de Aohren an’n Kopp un\
 luster nich drup.“\
-\
+
 „Ick will’t versöken,“ sagg Wilm.\
-\
+
 „Un dann sall sick dat wull wier riegen#footnote[in Ordnung kommen]. He\
 is ut’t Geleise kummen dör den Daut von din\
 siäg Moder, Wilm! He mott sick erst wier tor\
 Ruh setten.“\
-\
+
 „Dat duert owwer hellske lange,“ meinde #typo[Wil][Wilm].\
-\
+
 „Gutt Dink will Wiele häbben. Wu is’t,\
 sin Ji all an de Katuffeln? Wi häfft en Deel\
 slächte derbi, owwer wat sall man maken?\
@@ -9833,7 +9865,7 @@ west, un wenn man de Engel ganz genau bekiek,\
 dann häfft se Flaih in de Flitken#footnote[Flöhe in den Flügeln]. Dat is nu so’n\
 Küern, man soll’t leiwer nich seggen, owwer et\
 ligg viell Waohrheit drin.“ — —\
-\
+
 Graut Lahm verstonn’t up sine Wiese binaoh\
 gerade so gutt, iähr to trösten, äs de Pastor\
 Owwer de Diäre, de nu kamm, was weiniger\
@@ -10535,25 +10567,25 @@ flüggs. Junge, wu könns du so’n dumm Tüg\
 maken? En Sissemänken in’t Gick!“#pagebreak()
 
 Fritz reet de Augen laoß, so wiet äs’t gonk.\
-\
+
 „Icke? Mein Ji dann, ick hädd’ dat dohen?“\
-\
+
 „Well dann süß? Vader doch auk nich.“\
-\
+
 De Gedanke, dat de aolle Schultenvader en\
 Sissemänken makt hädde, kamm Fritz so snurrig\
 vüör, dat he hell anfonk to lachen. Faots drup\
 hadd’ he eenen wäg ächter de Liäppels.\
-\
+
 „Au, Schulte! Dat döht weh!“\
-\
+
 „Dat sall’t auk, du Undocht#footnote[Taugenichts]!“\
-\
+
 „Un glieks blött mi de Niäse wier.“\
-\
+
 „Dat schadt di nich, du salls de Sissemänkes\
 ächterwiäges#footnote[hinterwegs] laoten.“\
-\
+
 „Dat hadde Natz Hauküötters daohen, icke\
 nich. Äs wi förbiföhrden, lait he dat Sisse-\
 mänken laoß mitten up de Schassee, et flaug\
@@ -12049,14 +12081,14 @@ de Backen.\
 Un von’t Duorp hiär klüngen de Sunndags-?\
 klocken.\
 
+// </ MAIN MATTER >
 
 
 
-// === BACK MATTER ===
+// < BACK MATTER >
+
+// </ BACK MATTER >
 
 
 
-
-// --------------------------
-// END OF »DAT VEERTE GEBOTT«
-// --------------------------
+// </ DAT VEERTE GEBOTT >
