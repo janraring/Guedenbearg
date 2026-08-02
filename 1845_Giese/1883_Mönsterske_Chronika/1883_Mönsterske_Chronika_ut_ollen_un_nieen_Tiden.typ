@@ -4,7 +4,7 @@
 /*                                                      */
 /*                       CC BY 4.0.                     */
 /*                                                      */
-/*   To view a copy of this license, visit              */
+/*   To view a copy of the full license, visit          */
 /*   https://creativecommons.org/licenses/by/4.0/       */
 /*                                                      */
 /*      This license requires that reusers give         */
@@ -16,74 +16,99 @@
 /********************************************************/
 
 
-// === METADATA ===
+
+// < METADATA >
 
 // Title:   Mönsterske Chronika ut ollen un nieen Tiden
 // Author:  Franz Giese
 // Date:    1883
 // Edition: 1st (1883)
 //
-// Digital original: https://digital.ub.fu-berlin.de/viewer/toc/BV026211539/139/-/
-// Work exhibition:  https://www.niederdeutsche-literatur.de/autoren/person-werke.php?ID=108&START=1&ORD=JAHR
+// Digital Original: https://digital.ub.fu-berlin.de/viewer/toc/BV026211539/139/-/
+// Work Exhibition:  https://www.niederdeutsche-literatur.de/autoren/person-werke.php?ID=108&START=1&ORD=JAHR
 //
-// Released:      2026-04-13
-// Latest update: 2026-04-13
+// First Release: 2026-04-13
+// Latest Update: 2026-08-02
 //
-// Editorial process:
+// Editorial Process:
 //   1) Manual transcription (no markup; removed hyphens and page breaks).
 //   2) Comparison and correction against an OCR transcription.
 //   3) Added markup and re-inserted hyphens and page breaks.
 //   4) Added all Footnotes.
+//
+// Editorial Notes:
+//   - Some typos may have gotten corrected silently.
 
-
-// === MARKUP AND DEBUGGING ===
-
-#set document(title: [Mönsterske Chronika ut ollen un nieen Tiden])  // Sets document title
-#set document(author: "Franz Giese")               // Sets document author
-//#set page(numbering: "1")                          // Turns on page numbering
-#set page(header: counter(footnote).update(0))     // Resets footnote counter on every page
-
-#set quote(block: true)                            // Turns on block quotes
-#let gesperrt(body) = text(tracking: 0.1em, body)  // For letter-spaced text
-#let antiqua(body) = text(font: "Noto Sans", size: .85em, body)  // For text set in antiqua
-#let typo(body, correction) = text([#body#super[#highlight(fill: silver)[[#correction]]]])  // For marking typos
-
-#show "\u{00AD}": "-"                              // Displays all soft hyphens
+// </ METADATA >
 
 
 
+// < TYPST SETTINGS >
 
-// ----------------------------------------------------------
-// BEGINNING OF »MÖNSTERSKE CHRONIKA UT OLLEN UN NIEEN TIDEN«
-// ----------------------------------------------------------
+// PDF metadata
+#set document(title: [Mönsterske Chronika ut ollen un nieen Tiden])
+#set document(author: "Franz Giese")
+#set document(date: datetime(year: 1883, month: 1, day: 1))
+
+// Custom markup
+#let gesperrt(body) = text(tracking: 0.1em, body)
+#let antiqua(body) = text(font: "Noto Sans", size: .85em, body)
+#let typo(body, correction) = text([#body#super[#highlight(fill: silver)[[#correction]]]])
+
+// Display settings
+#show "\u{00AD}": "-"
+#show "***": [#h(1cm) \* #h(1cm) \* #h(1cm) \*]
+
+// </ TYPST SETTINGS >
 
 
 
+// < MÖNSTERSKE CHRONIKA UT OLLEN UN NIEEN TIDEN >
 
-// === TITLE PAGE ===
+
+
+// < TYPST SETTINGS >
+
+// Turn on block quotes
+#set quote(block: true)
+
+// Reset footnote counter on every page
+#set page(header: counter(footnote).update(0))
+
+// </ TYPST SETTINGS >
+
+
+
+// < TITLE PAGE >
 
 Mönsterske Chronika\
-ut ollen un nieen Tiden.
+ut ollen un nieen Tiden.\
 
 Lüstige\
 Plattdütske Rimsels\
 von\
 Franz Giese,\
 Schriwer von „Frans Essink“, „Moder Essink“, „Mönstersk\
-Stillliäwen“, „Gedichte“ u. s. w.
+Stillliäwen“, „Gedichte“ u. s. w.\
 
 Münster i. W., 1883.\
 Selbstverlag des Verfassers.#pagebreak()
 
+// </ TITLE PAGE >
 
-/* Blank page */
 
+
+// < BLANK PAGE >
 
 #pagebreak()
 
+// </ BLANK PAGE >
 
 
-// === FRONT MATTER ===
+
+// < FRONT MATTER >
+
+
 
 = Vorrede.
 
@@ -132,14 +157,26 @@ Münster in Westfalen, März 1883.\
 
 *Franz Giese.*#pagebreak()
 
-
-
-// === MAIN MATTER ===
+// </ FRONT MATTER >
 
 
 
-#set page(numbering: "1")                          // Turns on page numbering
+// < TYPST SETTINGS >
+
+// Reset page counter to 1
 #counter(page).update(1)
+
+// Turn on page numbering
+#set page(numbering: "1")
+
+// </ TYPST SETTINGS >
+
+
+
+// < MAIN MATTER >
+
+
+
 = De Schinkensendung to’r rechten Tid.\
 
 De Landraod waor en ollen Mann,\
@@ -1022,7 +1059,7 @@ Wenn anner’ noch in besten Draff!\
 Dat iss es tweemaol twee so wiss —\
 Un nu, ji Härens, nu Adjüss!“\
 
-  \*  \*  \*\
+\*\*\*\
 
 In’t vüör’ge Jaohr — et waor in Mai —\
 Dao harr ik ju ne graute Frei’:\
@@ -1839,8 +1876,8 @@ Un treckt de Buxe sölwer an,\
 Laot’t alls so bliwen, es et iss,\
 Dat iss dat Best’, un nu, Adjüss!“\
 
-  \*  \*  \*\
-  
+\*\*\*\
+
 De Diäken mok noch manniges Jaohr\
 Den Willen Gotts up Plattdütsk klaor.\
 De Lü’ bekreegen ehren Sinn\
@@ -1892,7 +1929,7 @@ Met Stolt de Mönsterlänner nennt,\
 Un doch desölwe von Natur:\
 De fromme, trüe, slichte Buer.\
 
-  \*  \*  \*\
+\*\*\*\
 
 In Mönster gonk uss’ Achtermann\
 Di faken auk bi Essinks an.\
@@ -2039,7 +2076,7 @@ Sin Liäwdag kümmp de nich te Enn’!\
 En Quiäler iss un bliff di de,\
 Guod si gedankt — wi saggen: „Ne!““\
 
-  \*  \*  \*\
+\*\*\*\
 
 Wull füftein Jaohre sind vergaohn,\
 Dao süht man in de Tidunk staohn:\
@@ -2192,7 +2229,7 @@ Iss mi te langsam doch füörwaohr,\
 He iss mi lange nich so gau,\
 Es ik et wünsk’ von mine . . . . Frau.“\
 
-  \*  \*  \*\
+\*\*\*\
 
 Well mennt, Frans Essink wäör nu stuorwen,\
 De söch ne Uhle achter’n Uowen.\
@@ -2416,7 +2453,7 @@ En düft’gen kreeg ik afgerietten,\
 In’t Unglück brenkt doch alle Welt\
 En Fraumensk, wat ehr Mul nich höllt!!“\
 
-  \*  \*  \*\
+\*\*\*\
 
 ’T wass neigsten Naomiddag üm veer,\
 Dao quamm di alle Welt derher.\
@@ -3085,7 +3122,7 @@ Et waor en rechten dummen Tog,\
 Doch, Majestät, füör düsse Ehr’\
 Dao mök ik socke Tüöge mehr!“\
 
-  \*  \*  \*\
+\*\*\*\
 
 De Tid — et waor ne schöne Tid —\
 De ligg all vettig Jaohr’ boll wid,\
@@ -3217,7 +3254,7 @@ De’t mehr es eene doeen kann,#pagebreak()
 Här Raod, nu laot’t noch eenen stigen,\
 Ik will dann auk gewißlik swigen!“ —\
 
-  \*  \*  \*\
+\*\*\*\
 
 Wenn usse Fohrmann swiegen hett,\
 Dann iss dat je recht schön un nett.\
@@ -3364,9 +3401,9 @@ Genog, he saog nich viel up Geld.\
 Waor he auk achtendiärtig Jaohr,\
 He waor noch nett un stramm füörwaohr,\
 Un es he wull, dao sagg auk se\
-Un Vaer un Moder auk nich „Ne“.
+Un Vaer un Moder auk nich „Ne“.\
 
-  \*  \*  \*#pagebreak()
+\*\*\*#pagebreak()
 
 All siewen Jaohre sind’t binaoh,\
 Un all veer Kinnerkes sind dao.\
@@ -3840,7 +3877,7 @@ Di es en Vuegel nao’t Gericht.\
 Un Hänsken söll nich trurig sin?\
 Sowat mök jedder een doch Pin!“\
 
-  \*  \*  \*\
+\*\*\*\
 
 De aame Hans iss lang all daud,\
 Iss fri von Sliäg’ un alle Naud,\
@@ -4031,7 +4068,7 @@ He hett den Josep nich ankieken,\
 Un wat noch duller — un nich recht —\
 Sin’ Frau hett he kin Wäödken seggt.\
 
-  \*  \*  \*#pagebreak()
+\*\*\*#pagebreak()
 
 
 
@@ -4044,40 +4081,40 @@ Niem nix deraf, segg’t frank un fri —\
 „De Püppkes hebbt te enge Schoh,\
 Un — kine Höhneraug’n derto.“#pagebreak()
 
+// </ MAIN MATTER >
 
 
 
-// === BACK MATTER ===
+// < BACK MATTER >
+
+
 
 = Inhalt.\
 
                                             Seite\
- 1. De Schinkensendung to rechter Tid . . . .   1\
- 2. De niee Pastor . . . . . . . . . . .   5\
- 3. De Buxe von Bändken von Gaolen . . . .  10\
- 4. De olle Blücher un de olle Buer . . . . .  18\
- 5. De beiden Dokters . . . . . . . . . .  25\
- 6. De kloke Paoter . . . . . . . . . . .  32\
- 7. De kurjose Frieer . . . . . . . . . .  43\
- 8. De Deputation ut H...... . . . . . .  50\
- 9. Willem Achtermann un Settken Essink . .  58\
-10. De Riäknungsräöthin un de Klocke . . . .  69\
-11. Doktor Holtermann un de angaohende Student  77\
-12. An usse Bueren . . . . . . . . . . .  84\
-13. De Küenink un de Stadtraod . . . . .  91\
-14. De Raod un de Fohrmann . . . . . . .  99\
-15. De Junkgesell un de Flauh . . . . . . 103\
-16. De beiden Gespenster . . . . . . . . . 108\
-17. De beiden Referendarien . . . . . . . . 117\
-18. De Püppkes von F..... . . . . . . . 124\
-#pagebreak()
+\ 1. De Schinkensendung to rechter Tid . . . .   1\
+\ 2. De niee Pastor . . . . . . . . . . .   5\
+\ 3. De Buxe von Bändken von Gaolen . . . .  10\
+\ 4. De olle Blücher un de olle Buer . . . . .  18\
+\ 5. De beiden Dokters . . . . . . . . . .  25\
+\ 6. De kloke Paoter . . . . . . . . . . .  32\
+\ 7. De kurjose Frieer . . . . . . . . . .  43\
+\ 8. De Deputation ut H...... . . . . . .  50\
+\ 9. Willem Achtermann un Settken Essink . .  58\
+\10. De Riäknungsräöthin un de Klocke . . . .  69\
+\11. Doktor Holtermann un de angaohende Student  77\
+\12. An usse Bueren . . . . . . . . . . .  84\
+\13. De Küenink un de Stadtraod . . . . .  91\
+\14. De Raod un de Fohrmann . . . . . . .  99\
+\15. De Junkgesell un de Flauh . . . . . . 103\
+\16. De beiden Gespenster . . . . . . . . . 108\
+\17. De beiden Referendarien . . . . . . . . 117\
+\18. De Püppkes von F..... . . . . . . . 124#pagebreak()
+
+Druck von Bauer & Witzler in Oberhausen.\
+
+// </ BACK MATTER >
 
 
-Druck von Bauer & Witzler in Oberhausen.
 
-
-
-
-// ---------------------------------------------------
-// END OF »MÖNSTERSK CHRONICA UT OLLEN UN NIEEN TIDEN«
-// ---------------------------------------------------
+// </ MÖNSTERSKE CHRONIKA UT OLLEN UN NIEEN TIDEN >
