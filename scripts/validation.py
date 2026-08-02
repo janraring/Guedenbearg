@@ -230,7 +230,7 @@ def has_matching_tags(lines: list[str]):
 
     for n, line in enumerate(lines):
         if line.startswith("// < "):
-            tags = re.findall(r"// < (.+?) >", line)[0]
+            tags = re.findall(r"// < (.+?) >", line)
             if len(tags) == 0:
                 add_issue(n, line, "Malformed tag")
                 continue
@@ -240,7 +240,7 @@ def has_matching_tags(lines: list[str]):
             if len(tags) == 0:
                 add_issue(n, line, "Malformed tag")
                 continue
-            if not stack:
+            if len(stack) == 0:
                 add_issue(n, line, f"Unexpected closing tag </ {tags[0]}>")
             elif tags[0] == stack[-1]:
                 stack.pop()
