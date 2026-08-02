@@ -43,8 +43,8 @@ def main():
             print(f"No file found under {path}")
             continue
 
-        print(f"\n    📜 {path.name}\n")
-        validate_file(content)
+        issues, non_issues = validate_file(content)
+        print_verdict(path.name, issues, non_issues)
 
 
 def validate_file(content: str):
@@ -63,8 +63,9 @@ def validate_file(content: str):
     all_blank_pages_within_tags(lines)
     has_trailing_whitespace(lines)
     has_valid_spacing(lines)
+    are_numbers_escaped(lines)
 
-    print_verdict()
+    return ISSUES, NON_ISSUES
 
 
 # === Utilities for collecting messages ===
@@ -88,15 +89,20 @@ def add_nonissue(msg):
     NON_ISSUES.append(NonIssue(msg))
 
 
-def print_verdict():
-    for non_issue in NON_ISSUES:
-        print(f"✅ {non_issue.msg}")
-    if ISSUES:
-        print(f"{len(ISSUES)} issues:")
-    for issue in ISSUES:
+def print_verdict(file_name: str, issues: list[Issue], non_issues: list[NonIssue]):
+    if len(issues) == 0:
+        print(f"📜 {file_name}  ✅")
+        return
+
+    print(f"📜 {file_name}  🚨 {len(issues)} Issues:")
+    for issue in issues:
         print(
-            f"  ⚠️ {issue.msg.upper()} in line {issue.line_number + 1}: {issue.line_text}"
+            f"    ⚠️  [{issue.line_number + 1}] {issue.msg.upper()}: {issue.line_text}"
         )
+    print()
+
+    # for non_issue in non_issues:
+    #     print(f"✅ {non_issue.msg}")
 
 
 # === Tests ===
@@ -329,7 +335,7 @@ def has_valid_spacing(lines: list[str]):
     """There are only a few distinct types of lines:
     - empty lines
     - license lines (start with "/*")
-    - typst settings (start with "#")
+    - typst settings (start with "#" or "]")
     - opening tags (start with "// < ")
     - closing tags (start with "// </")
     - other meta lines (start with "//")
@@ -361,6 +367,8 @@ def has_valid_spacing(lines: list[str]):
         "C": (1, 3),  # Closing tag
         "M": (0, 0),  # Meta
         "H": (3, 1),  # Headline
+        "I": (2, 1),  # Headline 2
+        "J": (1, 1),  # Headline 3 and higher
         "t": (0, 0),  # Text (inner lines)
         "T": (0, 1),  # Text (outer lines)
     }
@@ -383,13 +391,15 @@ def has_valid_spacing(lines: list[str]):
             next_line_type = "C"
         elif line.startswith("//"):
             next_line_type = "M"
-        elif line.startswith("#"):
+        elif line.startswith(("#", "]")):
             next_line_type = "s"
+        elif line.startswith("==="):
+            next_line_type = "J"
+        elif line.startswith("=="):
+            next_line_type = "I"
         elif line.startswith("="):
             next_line_type = "H"
-        elif line.endswith("\\"):
-            next_line_type = "t"
-        elif line.endswith("#pagebreak()"):
+        elif line.endswith(("\\", "#pagebreak()")):
             next_line_type = "t"
         else:
             add_issue(n, line, "Missing content terminal")
@@ -419,6 +429,12 @@ def has_valid_spacing(lines: list[str]):
         add_nonissue("All lines have a valid format")
     if valid_spacing:
         add_nonissue("All spacing is valid")
+
+
+def are_numbers_escaped(lines: list[str]):
+    for n, line in enumerate(lines):
+        if re.match(r"\d+\.", line) is not None:
+            add_issue(n, line, "Unescaped line-initial ordinal")
 
 
 if __name__ == "__main__":
