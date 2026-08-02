@@ -16,7 +16,8 @@
 /********************************************************/
 
 
-// === METADATA ===
+
+// < METADATA >
 
 // Title:   De Iärfschopp
 // Author:  Augustin Wibbelt
@@ -27,51 +28,76 @@
 // Work exhibition:  https://augustinwibbelt.de/wp-content/uploads/2022/02/21_c.jpg
 //
 // Released:      2026-04-14
-// Latest update: 2026-04-14
+// Latest update: 2026-08-02
 //
 // Editorial process:
 //   1) Manual transcription (no markup; removed hyphens and page breaks).
 //   2) Comparison and correction against an OCR transcription.
 //   3) Added markup and re-inserted hyphens and page breaks.
+//
+// Editorial Notes:
+//   - Some typos may have gotten corrected silently.
 
-
-// === MARKUP AND DEBUGGING ===
-
-#set document(title: [De Iärfschopp])              // Sets document title
-#set document(author: "Augustin Wibbelt")          // Sets document author
-#set page(numbering: "1")                          // Turns on page numbering
-#set page(header: counter(footnote).update(0))     // Resets footnote counter on every page
-
-#set quote(block: true)                            // Turns on block quotes
-#let gesperrt(body) = text(tracking: 0.1em, body)  // For letter-spaced text
-#let antiqua(body) = text(font: "Noto Sans", size: .85em, body)  // For text set in antiqua
-#let typo(body, correction) = text([#body#super[#highlight(fill: silver)[[#correction]]]])  // For marking typos
-
-#show "\u{00AD}": "-"                              // Displays all soft hyphens
+// </ METADATA >
 
 
 
+// < TYPST SETTINGS >
 
-// ----------------------------
-// BEGINNING OF »DE IÄRFSCHOPP«
-// ----------------------------
+// PDF metadata
+#set document(title: [De Iärfschopp])
+#set document(author: "Augustin Wibbelt")
+#set document(date: datetime(year: 1910, month: 1, day: 1))
+
+// Custom markup
+#let gesperrt(body) = text(tracking: 0.1em, body)
+#let antiqua(body) = text(font: "Noto Sans", size: .85em, body)
+#let typo(body, correction) = text([#body#super[#highlight(fill: silver)[[#correction]]]])
+
+// Display settings
+#show "\u{00AD}": "-"
+#show "***": [#h(1cm) \* #h(1cm) \* #h(1cm) \*]
+
+// </ TYPST SETTINGS >
 
 
 
+// < DE IÄRFSCHOPP >
 
-// === TITLE PAGE ===
+
+
+// < TYPST SETTINGS >
+
+// Turn on block quotes
+#set quote(block: true)
+
+// Turn on page numbering
+#set page(numbering: "1")
+
+// Reset footnote counter on every page
+#set page(header: counter(footnote).update(0))
+
+// </ TYPST SETTINGS >
+
+
+
+// < TITLE PAGE >
 
 De Iärfschopp.#pagebreak()
 
+// </ TITLE PAGE >
 
-/* Blank page */
 
+
+// < BLANK PAGE >
 
 #pagebreak()
 
+// </ BLANK PAGE >
 
 
-// === FRONT MATTER ===
+
+// < FRONT MATTER >
 
 De Iärfschopp\
 
@@ -84,13 +110,17 @@ Augustin Wibbelt\
 Dritte Auflage#pagebreak()
 
 
-/* Blank page */
 
+// < BLANK PAGE >
 
 #pagebreak()
 
+// </ BLANK PAGE >
+
+
 
 = Inhalt\
+
                                                Seite\
 I. Peter-Ohm kümp . . . . . . . . . . . . . .   7\
 II. Dat Lock in’n Stammbaum . . . . . . . . .  16\
@@ -119,15 +149,19 @@ XXIV. Dat niee Testament . . . . . . . . . . . . 295\
 XXV. Braohms Moder mäck en Strieck dör de Riäcknunk 305\
 XXIV. En Jaohr later . . . . . . . . . . . . . . 314#pagebreak()
 
+// </ FRONT MATTER >
 
-/* Blank page */
 
+
+// < BLANK PAGE >
 
 #pagebreak()
 
+// </ BLANK PAGE >
 
 
-// === MAIN MATTER ===
+
+// < MAIN MATTER >
 
 
 
@@ -231,7 +265,7 @@ wull gaohen —“\
 „Drei Snäpse!“ raip Peter-Ohm dotüsken.\
 
 „Ick sagg, he is so lange nich mähr hier west,\
-du moß abslut äs hengaohen un tokiecken —“
+du moß abslut äs hengaohen un tokiecken —“\
 
 „Drei Snäpse!“ raip Peter-Ohm all wat un-?\
 gedülliger.#pagebreak()
@@ -764,7 +798,7 @@ meinde de Meerske.\
 De junge Schulte moß lachen.\
 
 „Ja, Tante,“ fonk he an, do foll em Peter-Ohm\
-int Waort:
+int Waort:\
 
 „Mi steiht vüör, dat enmol en annern harin-?\
 hieraot’t hät up Bulmkes Hoff.“\
@@ -1562,7 +1596,7 @@ Se lait en halben Stock vull Maosken fallen un\
 laip ganz raut an in’t Gesicht.\
 
 „Wenn Ji’t gähn wietten willt — ick sin fief-?\
-unvättig.“
+unvättig.“\
 
 „Wat? Fiefunvättig erst? Ick hädde Ju\
 mindestens för fiefunfiftig verslietten.“\
@@ -1938,7 +1972,7 @@ krigg.“\
 Holtkamp mok sick denn auk wanners up’n\
 Patt. Owwer he was de erste nich.\
 
-  \*  \*  \*\
+\*\*\*\
 
 „Ick glaif wohrhaftig,“ sagg de Mamsell un\
 keek dört Küeckenfenster de Wiesk hendahl, „do\
@@ -2990,7 +3024,7 @@ all Üöwerflaut hät. Lustig knallde Anton sine\
 Pietsk, dat dat Echo wach wor un Antwaort gaff.\
 Et is schön in’t Holt!\
 
-  \*  \*  \*\
+\*\*\*\
 
 De Meerske mok sick bi Tieden up’n Patt, denn\
 bis Holldrup was’t ne dicke Stunn. Se was erst\
@@ -3489,7 +3523,7 @@ Resselveertheit was wier wäg, se green.\
 „Dat weet ick,“ sagg Holtkamp ruhig, „et is\
 bloß Daorheit, süß küerde ick no’n anner Waort.“ —\
 
-  \*  \*  \*\
+\*\*\*\
 
 Mamsell Christine Schmachtenkämper was unner-?\
 dessen dorüöwer ut, en annern Plan in’t Wiärk to\
@@ -5060,7 +5094,7 @@ und ganz genau, ich habe ein rechtliches Interesse.“\
 „Meinthalben!“ sagg de Amtsrichter verdreitlick.\
 „Und nun das Protokoll — verhandelt — —“\
 
-  \*  \*  \*\
+\*\*\*\
 
 Äs de Buern harutgöngen, was Holtkamp alleen,\
 bloß de Küötter Stakenbusk slaut sick em an.\
@@ -5732,7 +5766,7 @@ Dann lait se’n Söcht gaohen.\
 „Na,“ lachede Holtkamp, „ick huopp, he kümp\
 lebennig wier.“\
 
-  \*  \*  \*\
+\*\*\*\
 
 Anton was’t nich wuoll to Mote. He was jä’n\
 fixen Käl un hadd’ Kurasche för twee, owwer wenn’t\
@@ -5923,7 +5957,7 @@ He hadde egentlick gar kine Luhn mähr an sin\
 Geschäft — ja, wenn man met Frailein Dina auk\
 so küern könn, äs met Thresken!\
 
-  \*  \*  \*\
+\*\*\*\
 
 Et gonk all giegen Aobend.\
 
@@ -6198,7 +6232,7 @@ Holtkamp stonn up.\
 „Viell Glück! Ick will äs nao de Esparsett\
 kieken, ick glaif, wi könnt muorgen sniehen.“ —\
 
-  \*  \*  \*\
+\*\*\*\
 
 Äs de Meerske bi Surbrooks kamm, wor se\
 rächt ardig in Empfank nummen. De Schulten-?\
@@ -6432,7 +6466,7 @@ stürzen. Was meins du, Mutter?“\
 Holtkamp,“ he stonn up un daih iähr de Hand.\
 „Wir geben Bescheid. Grüßen Se zu Hause.“\
 
-  \*  \*  \*#pagebreak()
+\*\*\*#pagebreak()
 
 Et was wull en bittken kuottaf, owwer de\
 Meerske gaff sick tofriäden, denn he hadd’ dat so an\
@@ -8049,9 +8083,9 @@ du män gliek faots drei Hohner, Anton.“\
 fief köppeln.“\
 
 „Fief Stück? Junge, bis nich wies?“#pagebreak()
-\
+
 „Wat denks du, Moder! Natz-Ohm ätt alleen\
-all twee. Fief is nich toviell.“
+all twee. Fief is nich toviell.“\
 
 „Moß owwer de aollen utsöken, kiek nao de\
 Spuoren!“ —\
@@ -8081,7 +8115,7 @@ Trina hett.“\
 he — „na, et mott sick finnen. Will’t äs erst\
 slaopen.“\
 
-  \*  \*  \*\
+\*\*\*\
 
 De Meerske hadde unruhige Draime in de Nacht.\
 Dat ganze Hus was vull von Brutens west, alle in\
@@ -8178,7 +8212,7 @@ Friäden.“\
 He gonk up de Diäll, un de Uprohr unner dat\
 Hohnervolk steeg up’t höchste.\
 
-  \*  \*  \*\
+\*\*\*\
 
 An düt Traktement hät de Meerske no lange\
 dacht. Nao Jaohren no’, wenn se dovon vertall,\
@@ -9814,7 +9848,7 @@ Du moß iähr dat Waort afniehmen.“\
 Se wull en kleinen Gank maken — sall wull baoll\
 wierkummen.“\
 
-  \*  \*  \*\
+\*\*\*\
 
 Sunndag Naomdags mok Thresken gähn en\
 Spazeergank dör de Wiesk un üöwer’t Feld, un#pagebreak()
@@ -10287,7 +10321,7 @@ met üöwermächtige Gewaolt? Wat will de\
 Verstand met alle Bedenken, wenn dat ganze Hiätt\
 in Uprohr steiht? —\
 
-  \*  \*  \*\
+\*\*\*\
 
 Dat Aobendwiärken was daohen, Vader küerde\
 met Moder, de nich mähr von’t Bedde kamm, un\
@@ -10755,7 +10789,7 @@ dohen kanns. Gaoh nao’n Bedd’, Anton! Un wi\
 willt auk gaohen, et is all lat, un dat Schuer ver-?\
 tüht sick.“\
 
-  \*  \*  \*\
+\*\*\*\
 
 Anton was’t to Mot, äs wenn em dat Hagel-?\
 schuer mitten in all sine Blomen fallen wör. Owwer\
@@ -11078,7 +11112,7 @@ Ju bi’t Gericht beklagen, denn dat hät mi inladen.“\
 Süh, do is Smallenbrink — mott iäben en Waort\
 met em küern.“ —\
 
-  \*  \*  \*\
+\*\*\*\
 
 Et was binaoh iäben so fierlick, äs domols vör\
 säß Wiäcken, wo dat erste Testament laoßmakt\
@@ -11588,7 +11622,7 @@ Riäcknunk — süh, do kümp de Wagen met’n Pastor\
 — binn dat Piärd an un laot us haringaohen —\
 dat häört sick.“ —\
 
-  \*  \*  \*\
+\*\*\*\
 
 Braohms Moder hadde sick siliäwe nich giebben\
 wullt, wenn se auk no so elend was. Se hadde#pagebreak()
@@ -12002,11 +12036,13 @@ Dirk dach en Augenblick nao.\
 
 „Dat wull — owwer Krakeihl mök he doch.“#pagebreak()
 
+// </ MAIN MATTER >
 
 
-// === BACK MATTER ===
 
-Fredebeul & Koenen Verlag Essen
+// < BACK MATTER >
+
+Fredebeul & Koenen Verlag Essen\
 
 
 
@@ -12019,30 +12055,88 @@ eine Auswahl von Werken anderer Erzähler.\
 
 == I. Augustin Wibbelts plattdeutsche Werke:\
 
-/ De Pastor von Driebeck.: Erzählung in niederdeutscher\ Mundart. Preis broschiert *7.50 Mk*., elegant\ gebunden *9.00 Mk*.\ „Eine köstliche Gabe hat Wibbelt mit seiner\ Erzählung „De Pastor von Driebeck“ allen Freun-?\ den der niederdeutschen Mundart verabreicht.\ Poesie und Humor in #typo[sonniaem][sonnigem] Bunde. Unter\ allen bisher erschienenen Werken des gemütvollen,\ westfälischen Dichters möchte ich dieses obenan\ stellen.“ Dichterstimmen der Gegenwart.\
-/ Drüke-Möhne.: Lustige Geschichten in münsterländ.\ Mundart. 3. Bände. 1. u. 2. Band, 4. Auflage.\ 3. Band, 2. Auflage. Preis pro Band broschiert\ *7.00 Mk.*\ Die „#gesperrt[Internationalen Literaturbe-?\ richte]“ urteilen über dieses Werk: „Einen Griff\ ins Leben tat Augustin Wibbelt mit seinem pracht-?\ vollen Buche „Drüke-Möhne“. Das ist ein Er-?\ zähler, der so recht aus dem Vollen schöpft, der\ Augen und Ohren hat für die Regungen der\ Volksseele, der die Sprache seines Stammes be-?\ herrscht und liebt, der auch sein Volk liebt mit\ all seinen Tugenden und Fehlern, der sich noch\ den rechten Sinn bewahrt hat für das „Deftige“,\ dem aller moderner Krimskrams ein Greuel ist.\ Wibbelt schildert Zustände, die wohl jeder weiß;\ aber wie er sie sagt, das ist’s. Der gute Ton\ macht die Musik. Sein Humor ist derb wie das\ Brot in Westfalen, aber er ist auch gesund wie\ der Pumpernickel.“\
-#pagebreak()
+*De Pastor von Driebeck.* Erzählung in niederdeutscher\
+Mundart. Preis broschiert *7.50* Mk., elegant\
+gebunden *9.00* Mk.\
 
-Fredebeul & Koenen Verlag Essen
+„Eine köstliche Gabe hat Wibbelt mit seiner\
+Erzählung „De Pastor von Driebeck“ allen Freun-?\
+den der niederdeutschen Mundart verabreicht.\
+Poesie und Humor in #typo[sonniaem][sonnigem] Bunde. Unter\
+allen bisher erschienenen Werken des gemütvollen,\
+westfälischen Dichters möchte ich dieses obenan\
+stellen.“ Dichterstimmen der Gegenwart.\
 
-/ Hus Dahlen.: Eine Erzählung in münsterländischer\ Mundart. 2. Auflage. Preis broschiert *7.00 Mk*.,\ elegant gebunden *9.00 Mk*.\
-/ Dat veerte Gebott.: Erzählung in münsterländischer\ Mundart. Preis broschiert *7.00 Mk*., in Ganz-?\ leinwand *9.00 Mk*.\
-/ Mäten-Gaitlink.: Gedichte in münsterländ. Mund-?\ art. Preis broschiert *7.50 Mk*., in feiner Ganz-?\ leinwand *9.00 Mk*.\
-/ Schulte Witte.: Erzählung in münsterländ. Mundart.\ 1. Band: In der Stadt. — 2. Band: Trüg up’t\ Land. 2. Auflage. Preis pro Band broschiert\ *7.50 Mk*., elegant gebunden *9.00 Mk*.\
+*Drüke-Möhne.* Lustige Geschichten in münsterländ.\
+Mundart. 3. Bände. 1. u. 2. Band, 4. Auflage.\
+\3. Band, 2. Auflage. Preis pro Band broschiert\
+*7.00* Mk., elegant gebunden *9.00* Mk.\
+
+Die „#gesperrt[Internationalen Literaturbe-?\
+richte]“ urteilen über dieses Werk: „Einen Griff\
+ins Leben tat Augustin Wibbelt mit seinem pracht-?\
+vollen Buche „Drüke-Möhne“. Das ist ein Er-?\
+zähler, der so recht aus dem Vollen schöpft, der\
+Augen und Ohren hat für die Regungen der\
+Volksseele, der die Sprache seines Stammes be-?\
+herrscht und liebt, der auch sein Volk liebt mit\
+all seinen Tugenden und Fehlern, der sich noch\
+den rechten Sinn bewahrt hat für das „Deftige“,\
+dem aller moderner Krimskrams ein Greuel ist.\
+Wibbelt schildert Zustände, die wohl jeder weiß;\
+aber wie er sie sagt, das ist’s. Der gute Ton\
+macht die Musik. Sein Humor ist derb wie das\
+Brot in Westfalen, aber er ist auch gesund wie\
+der Pumpernickel.“#pagebreak()
+
+Fredebeul & Koenen Verlag Essen\
+
+*Hus Dahlen.* Eine Erzählung in münsterländischer\
+Mundart. 2. Auflage. Preis broschiert *7.00* Mk.,\
+elegant gebunden *9.00* Mk.\
+
+*Dat veerte Gebott.* Erzählung in münsterländischer\
+Mundart. Preis broschiert *7.00* Mk., in Ganz-?\
+leinwand *9.00* Mk.\
+
+*Mäten-Gaitlink.* Gedichte in münsterländ. Mund-?\
+art. Preis broschiert *7.50* Mk., in feiner Ganz-?\
+leinwand *9.00* Mk.\
+
+*Schulte Witte.* Erzählung in münsterländ. Mundart.\
+\1. Band: In der Stadt. — 2. Band: Trüg up’t\
+Land. 2. Auflage. Preis pro Band broschiert\
+*7.50* Mk., elegant gebunden *9.00* Mk.\
 
 
 == II. Raohdorper Geschichten von Dr. A. Grunenberg.\
 
-/ Band I\: Tante Sättken.: Vertellster ut et Mönster-?\ land. 276 Seiten, elegant gebunden *6.00 Mk*.\
-/ Band II\: Giard Braohmkamps,: A’ Vertellster ut\ dat Mänsterland. 332 Seiten, eleg. gebd. *6.00 Mk*.\
-/ Band III\: Mien Duorp: un siene Inwuöhrners.\ 162 Seiten, elegant gebunden *4.50 Mk*.\ Prächtige Gestalten zeichnet uns der Ver-?\ fasser in vorstehender Erzählung. Gestalten,\ schlicht und einfach, hervorragend durch Herzens-?\ güte und edlen Sinn. Getragen wird die Er-?\ zählung von einem herzerquickenden Humor.\ Das Buch bedeutet eine wertvolle Bereicherung\ der plattdeutschen Literatur. Es wird dem Leser\ manche angenehme Stunde bereiten, „manche“,\ denn es gehört nicht zu denen, die man einmal\ liest und dann für immer beiseite legt, sondern\ es ist eines von den seltenen Büchern, die man\ immer und immer wieder gern zur Hand nimmt.\
+Band I: *Tante Sättken.* Vertellster ut et Mönster-?\
+land. 276 Seiten, elegant gebunden *6.00* Mk.\
+
+Band II: *Giard Braohmkamps,* A’ Vertellster ut\
+dat Mänsterland. 332 Seiten, eleg. gebd. *6.00* Mk.\
+
+Band III: *Mien Duorp* un siene Inwuöhrners.\
+162 Seiten, elegant gebunden *4.50* Mk.\
+Prächtige Gestalten zeichnet uns der Ver-?\
+fasser in vorstehender Erzählung. Gestalten,\
+schlicht und einfach, hervorragend durch Herzens-?\
+güte und edlen Sinn. Getragen wird die Er-?\
+zählung von einem herzerquickenden Humor.\
+Das Buch bedeutet eine wertvolle Bereicherung\
+der plattdeutschen Literatur. Es wird dem Leser\
+manche angenehme Stunde bereiten, „manche“,\
+denn es gehört nicht zu denen, die man einmal\
+liest und dann für immer beiseite legt, sondern\
+es ist eines von den seltenen Büchern, die man\
+immer und immer wieder gern zur Hand nimmt.\
 
 Fredebeul & Koenen Essen Buchhandlung\
 Kibbelstraße 15.\
 
+// </ BACK MATTER >
 
 
 
-// ----------------------
-// END OF »DE IÄRFSCHOPP«
-// ----------------------
+// </ DE IÄRFSCHOPP >
