@@ -1,9 +1,8 @@
+import re
 import sys
 from datetime import date
 from pathlib import Path
 from typing import NamedTuple
-
-import regex as re
 
 METADATA_TAG = "METADATA"
 TYPST_SETTINGS_TAG = "TYPST SETTINGS"
@@ -22,6 +21,37 @@ TAGS = [
     MAIN_MATTER_TAG,
     BACK_MATTER_TAG,
 ]
+
+
+class File:
+    def __init__(self, file_name: str, raw: str):
+        self.file_name = file_name
+        self.raw = raw
+        self.lines = raw.split("\n")
+
+
+class Issue(NamedTuple):
+    line_number: int
+    line_text: str
+    msg: str
+
+
+class Issujo:
+    def __init__(self):
+        self.issues = []
+
+    def add(self, line_number: int, line_text: str, msg: str):
+        issue = Issue(line_number, line_text, msg)
+        self.issues.append(issue)
+
+
+def check(func):
+    def wrapper(file: File):
+        issues = Issujo()
+        func(file, issues)
+        return issues
+
+    return wrapper
 
 
 def main():
@@ -46,55 +76,47 @@ def main():
             print(f"No file found under {path}")
             continue
 
-        issues, non_issues = validate_file(content)
-        print_verdict(path.name, issues, non_issues)
+        file = File(path.name, content)
+        issues = validate_file(file)
+        print_verdict(path.name, issues)
 
 
-def validate_file(content: str):
-    global ISSUES
-    global NON_ISSUES
-    ISSUES = []
-    NON_ISSUES = []
+def validate_file(file: File) -> list[Issue]:
+    issues = []
+    checks = [
+        has_license,
+        has_agreeing_metadata,
+        only_uses_valid_tags,
+        has_matching_tags,
+        all_content_within_tags,
+        all_blank_pages_within_tags,
+        has_trailing_whitespace,
+        has_valid_spacing,
+        are_numbers_escaped,
+        check_indentation,
+        check_pagebreaks_in_block_quotes,
+    ]
 
-    lines = content.split("\n")
+    for check_fn in checks:
+        issues.extend(check_fn(file).issues)
 
-    has_license(content)
-    has_agreeing_metadata(content)
-    only_uses_valid_tags(content)
-    has_matching_tags(lines)
-    all_content_within_tags(content)
-    all_blank_pages_within_tags(lines)
-    has_trailing_whitespace(lines)
-    has_valid_spacing(lines)
-    are_numbers_escaped(lines)
-    check_indentation(lines)
-    check_pagebreaks_in_block_quotes(content)
-
-    return ISSUES, NON_ISSUES
+    issues.sort(key=lambda x: x.line_number)
+    return issues
 
 
 # === Utilities for collecting messages ===
 
 
-class Issue(NamedTuple):
-    line_number: int
-    line_text: str
-    msg: str
+def get_data_field(raw: str, issues: Issujo, pattern: str, error_msg: str, flags=0):
+    matches = re.findall(pattern, raw, flags=flags)
+    if len(matches) == 0:
+        issues.add(0, "", error_msg)
+        return ""
+    else:
+        return matches[0]
 
 
-class NonIssue(NamedTuple):
-    msg: str
-
-
-def add_issue(line_number, line_text, msg):
-    ISSUES.append(Issue(line_number, line_text, msg))
-
-
-def add_nonissue(msg):
-    NON_ISSUES.append(NonIssue(msg))
-
-
-def print_verdict(file_name: str, issues: list[Issue], non_issues: list[NonIssue]):
+def print_verdict(file_name: str, issues: list[Issue]):
     if len(issues) == 0:
         print(f"📜 {file_name}  ✅")
         return
@@ -102,19 +124,19 @@ def print_verdict(file_name: str, issues: list[Issue], non_issues: list[NonIssue
     print(f"📜 {file_name}\n  🚨 {len(issues)} Issues:")
     for issue in issues:
         print(
-            f"    ⚠️  [{issue.line_number + 1}] {issue.msg.upper()}: {issue.line_text}"
+            (f"    ⚠️  [{issue.line_number + 1}] {issue.msg.upper()}: {issue.line_text}")
         )
     print()
 
-    # for non_issue in non_issues:
-    #     print(f"✅ {non_issue.msg}")
+
+# === Checks ===
 
 
-# === Tests ===
+@check
+def has_license(file: File, issues: Issujo):
+    """Checks that the license is present, current and formatted correctly.
 
-
-def has_license(raw: str):
-    """Asserts the following assumption(s):
+    Asserts the following assumptions:
     - The document has exactly one block comment (/* ... */),
       namely the license.
     - This license contains the current year.
@@ -125,20 +147,29 @@ def has_license(raw: str):
       the license is a square block of 16 * 64 - 1 characters,
       16 lines, 64 characters per line except for the last one
     """
-    licenses = re.findall(r"^/\*.+\*/", raw, flags=re.DOTALL)
+
+    NUM_LINES = 16
+    NUM_CHARS_ONE_YEAR = 59
+    NUM_CHARS_TWO_YEARS = 64
+
+    licenses = re.findall(r"^/\*.+\*/", file.raw, flags=re.DOTALL)
     year = date.today().year
     if len(licenses) != 1:
-        add_issue(0, "", "The document does not have a license")
+        issues.add(0, "", "The document does not have a license")
     elif str(year) not in licenses[0]:
-        add_issue(0, "", "Copyright information not up to date")
-    elif len(licenses[0]) not in [16 * 59 - 1, 16 * 64 - 1]:
-        add_issue(0, "", "License formatting seems to be off")
-    else:
-        add_nonissue("The document appears to have an up to date license")
+        issues.add(0, "", "Copyright information not up to date")
+    elif len(licenses[0]) not in [
+        NUM_LINES * NUM_CHARS_ONE_YEAR - 1,
+        NUM_LINES * NUM_CHARS_TWO_YEARS - 1,
+    ]:
+        issues.add(0, "", "License formatting seems to be off")
 
 
-def has_agreeing_metadata(raw: str):
-    """Asserts the following assumption(s):
+@check
+def has_agreeing_metadata(file: File, issues: Issujo):
+    """Checks that the metadata is present and internally consistent.
+
+    Asserts the following assumptions:
     - The metadata includes the work's title
     - The metadata includes the work's author
     - The metadata includes the work's year of publication
@@ -147,127 +178,128 @@ def has_agreeing_metadata(raw: str):
     - The PDF metadata includes the work's year of publication
     - File and PDF metadata are in agreement
     """
-    metadata_agrees = True
 
-    try:
-        file_title = re.findall(r"// Title:   (.+)$", raw, flags=re.MULTILINE)[0]
-    except IndexError:
-        file_title = ""
-        metadata_agrees = False
-        add_issue(0, "", "No title set in metadata")
-
-    try:
-        file_author = re.findall(r"// Author:  (.+)$", raw, flags=re.MULTILINE)[0]
-    except IndexError:
-        file_author = ""
-        metadata_agrees = False
-        add_issue(0, "", "No author set in metadata")
-
-    try:
-        file_date = re.findall(r"// Date:    (.+)$", raw, flags=re.MULTILINE)[0]
-    except IndexError:
-        file_date = ""
-        metadata_agrees = False
-        add_issue(0, "", "No date set in metadata")
-
-    try:
-        pdf_title = re.findall(r"#set document\(title: \[(.+)\]\)", raw)[0]
-    except IndexError:
-        pdf_title = ""
-        metadata_agrees = False
-        add_issue(0, "", "No title set for PDF")
-
-    try:
-        pdf_author = re.findall(r"#set document\(author: \"(.+)\"\)", raw)[0]
-    except IndexError:
-        pdf_author = ""
-        metadata_agrees = False
-        add_issue(0, "", "No author set for PDF")
-
-    try:
-        pdf_date = re.findall(
-            r"#set document\(date: datetime\(year: (\d+), month: \d+, day: \d+\)\)", raw
-        )[0]
-    except IndexError:
-        pdf_date = ""
-        metadata_agrees = False
-        add_issue(0, "", "No date set for PDF")
+    file_title = get_data_field(
+        raw=file.raw,
+        issues=issues,
+        pattern=r"// Title:   (.+)$",
+        error_msg="No title set in metadata",
+        flags=re.MULTILINE,
+    )
+    file_author = get_data_field(
+        raw=file.raw,
+        issues=issues,
+        pattern=r"// Author:  (.+)$",
+        error_msg="No author set in metadata",
+        flags=re.MULTILINE,
+    )
+    file_date = get_data_field(
+        raw=file.raw,
+        issues=issues,
+        pattern=r"// Date:    (.+)$",
+        error_msg="No date set in metadata",
+        flags=re.MULTILINE,
+    )
+    pdf_title = get_data_field(
+        raw=file.raw,
+        issues=issues,
+        pattern=r"#set document\(title: \[(.+)\]\)",
+        error_msg="No title set for PDF",
+    )
+    pdf_author = get_data_field(
+        raw=file.raw,
+        issues=issues,
+        pattern=r"#set document\(author: \"(.+)\"\)",
+        error_msg="No author set for PDF",
+    )
+    pdf_date = get_data_field(
+        raw=file.raw,
+        issues=issues,
+        pattern=r"#set document\(date: datetime\(year: (\d+), month: \d+, day: \d+\)\)",
+        error_msg="No date set for PDF",
+    )
 
     if not file_title == pdf_title:
-        metadata_agrees = False
-        add_issue(0, "", "PDF title and metadata title do not agree")
+        issues.add(0, "", "PDF title and metadata title do not agree")
     if not file_author == pdf_author:
-        metadata_agrees = False
-        add_issue(0, "", "PDF author and metadata author do not agree")
+        issues.add(0, "", "PDF author and metadata author do not agree")
     if not file_date == pdf_date:
-        metadata_agrees = False
-        add_issue(0, "", "PDF date and metadata date do not agree")
-
-    if metadata_agrees:
-        add_nonissue("All metadata is set properly")
+        issues.add(0, "", "PDF date and metadata date do not agree")
 
 
-def only_uses_valid_tags(raw: str):
-    """Asserts the following assumption(s):
+@check
+def only_uses_valid_tags(file: File, issues: Issujo):
+    """Checks that only valid tags are being used.
+
+    Asserts the following assumption:
     - The only tags being used are the ones listed above
       and the document title
     """
-    try:
-        title = re.findall(r"// Title:   (.+)$", raw, flags=re.MULTILINE)[0]
-    except IndexError:
-        title = ""
 
-    lines = raw.split("\n")
-    tags_valid = True
+    title = get_data_field(
+        raw=file.raw,
+        issues=issues,
+        pattern=r"// Title:   (.+)$",
+        error_msg="No title found",
+        flags=re.MULTILINE,
+    )
+
+    lines = file.raw.split("\n")
     for n, line in enumerate(lines):
         if not line.startswith("// < "):
             continue
-        tag = re.findall(r"// < (.+?) >", line)[0]
-        if tag not in TAGS + [title.upper()]:
-            add_issue(n, line, "Unknown tag")
-            tags_valid = False
-    if tags_valid:
-        add_nonissue("All tags are valid")
+        tag = get_data_field(
+            raw=file.raw,
+            issues=issues,
+            pattern=r"// < (.+?) >",
+            error_msg="Malformed tag",
+        )
+        if tag != "" and tag not in TAGS + [title.upper()]:
+            issues.add(n, line, "Unknown tag")
 
 
-def has_matching_tags(lines: list[str]):
-    """Asserts the following assumption(s):
+@check
+def has_matching_tags(file: File, issues: Issujo):
+    """Checks that every opening tag has a matching closing tag.
+
+    Asserts the following assumptions:
     - Every opening tag has a matching closing tag
     - The spans are nested, i.e. they do not cross
     """
+
     stack = []
 
-    tags_match = True
-
-    for n, line in enumerate(lines):
+    for n, line in enumerate(file.lines):
         if line.startswith("// < "):
-            tags = re.findall(r"// < (.+?) >", line)
-            if len(tags) == 0:
-                add_issue(n, line, "Malformed tag")
-                continue
-            stack.append(tags[0])
+            tag = get_data_field(
+                raw=file.raw,
+                issues=issues,
+                pattern=r"// < (.+?) >",
+                error_msg="Malformed tag",
+            )
+            stack.append(tag)
         elif line.startswith("// </"):
-            tags = re.findall(r"// </ (.+?) >", line)
-            if len(tags) == 0:
-                add_issue(n, line, "Malformed tag")
+            tag = get_data_field(
+                raw=file.raw,
+                issues=issues,
+                pattern=r"// </ (.+?) >",
+                error_msg="Malformed tag",
+            )
+            if tag == "":
                 continue
-            if len(stack) == 0:
-                add_issue(n, line, f"Unexpected closing tag </ {tags[0]}>")
-            elif tags[0] == stack[-1]:
+            elif len(stack) == 0:
+                issues.add(n, line, f"Unexpected closing tag </ {tag}>")
+            elif tag == stack[-1]:
                 stack.pop()
             else:
-                add_issue(n, line, f"Expected < {stack[-1]} > to get closed first")
-                tags_match = False
-
-    if len(stack) != 0:
-        tags_match = False
-
-    if tags_match:
-        add_nonissue("All tags are being closed")
+                issues.add(n, line, f"Expected < {stack[-1]} > to get closed first")
 
 
-def all_content_within_tags(raw: str):
-    """Asserts the following assumption(s):
+@check
+def all_content_within_tags(file: File, issues: Issujo):
+    """Checks that all content lines are placed inside content tags.
+
+    Asserts the following assumption:
     - All content/text lines are situated within content tags
     """
 
@@ -275,8 +307,7 @@ def all_content_within_tags(raw: str):
         text = match.group(0)
         return "\n" * text.count("\n")
 
-    content_within_tags = True
-
+    raw = file.raw
     for tag in (
         TITLE_PAGE_TAG,
         FRONT_MATTER_TAG,
@@ -296,48 +327,44 @@ def all_content_within_tags(raw: str):
         if line == "":
             continue
         if line.endswith("\\") or line.endswith("#pagebreak()"):
-            add_issue(n, line, "Unexpected line outside of content tags")
-            content_within_tags = False
-
-    if content_within_tags:
-        add_nonissue("All content lines are enclosed in content tags")
+            issues.add(n, line, "Unexpected line outside of content tags")
 
 
-def all_blank_pages_within_tags(lines: list[str]):
-    """Asserts the following assumption(s):
+@check
+def all_blank_pages_within_tags(file: File, issues: Issujo):
+    """Checks that all blank pages are positioned inside the appropriate tags.
+
+    Asserts the following assumptions:
     - Blank pages are enclosed in the appropriate tag
     """
-    all_within_tags = True
 
-    for n, line in enumerate(lines):
+    for n, line in enumerate(file.lines):
         if not line == "#pagebreak()":
             continue
-        if n < 2 or lines[n - 2] != f"// < {BLANK_PAGE_TAG} >":
-            add_issue(n, line, "No opening BLANK-PAGE tag")
-            all_within_tags = False
-        if n >= len(lines) or lines[n + 2] != f"// </ {BLANK_PAGE_TAG} >":
-            add_issue(n, line, "No closing BLANK-PAGE tag")
-            all_within_tags = False
-
-    if all_within_tags:
-        add_nonissue("All blank pages are within appropriate tags")
+        if n < 2 or file.lines[n - 2] != f"// < {BLANK_PAGE_TAG} >":
+            issues.add(n, line, "No opening BLANK-PAGE tag")
+        if n + 2 >= len(file.lines) or file.lines[n + 2] != f"// </ {BLANK_PAGE_TAG} >":
+            issues.add(n, line, "No closing BLANK-PAGE tag")
 
 
-def has_trailing_whitespace(lines: list[str]):
-    """Asserts the following assumption(s):
+@check
+def has_trailing_whitespace(file: File, issues: Issujo):
+    """Checks that no line has trailing whitespace.
+
+    Asserts the following assumption:
     - No non-empty line should have trailing whitespace.
     """
-    trailing_whitespace = False
-    for n, line in enumerate(lines):
+
+    for n, line in enumerate(file.lines):
         if line != "" and line[-1].isspace():
-            add_issue(n, line, "trailing whitespace")
-            trailing_whitespace = True
-    if not trailing_whitespace:
-        add_nonissue("No trailing whitespaces")
+            issues.add(n, line, "trailing whitespace")
 
 
-def has_valid_spacing(lines: list[str]):
-    """There are only a few distinct types of lines:
+@check
+def has_valid_spacing(file: File, issues: Issujo):
+    """Checks that the spacing between lines is as desired.
+
+    There are only a few distinct types of lines:
     - empty lines
     - license lines (start with "/*")
     - typst settings (start with "#" or "]")
@@ -347,7 +374,7 @@ def has_valid_spacing(lines: list[str]):
     - headlines (start with "=")
     - actual text lines (end with "\\" or "#pagebreak()")
 
-    Asserts the following assumption(s):
+    Asserts the following assumptions:
     - Every line is of one of the types listed above
     - 0 empty lines before the license
     - 3 empty lines after the license
@@ -379,11 +406,8 @@ def has_valid_spacing(lines: list[str]):
     }
 
     n_newlines = 0
-    valid_spacing = True
-    valid_lines = True
-
     prev_line_type = ""
-    for n, line in enumerate(lines):
+    for n, line in enumerate(file.lines):
         if line == "":
             n_newlines += 1
             prev_line_type = prev_line_type.upper()
@@ -407,8 +431,7 @@ def has_valid_spacing(lines: list[str]):
         elif line.endswith(("\\", "#pagebreak()")):
             next_line_type = "t"
         else:
-            add_issue(n, line, "Missing content terminal")
-            valid_lines = False
+            issues.add(n, line, "Missing content terminal")
             continue
 
         if prev_line_type == "":
@@ -421,30 +444,38 @@ def has_valid_spacing(lines: list[str]):
         n_expected = max(pad_around_prev_type[1], pad_around_next_type[0])
         diff = abs(n_expected - n_newlines)
         if n_newlines < n_expected:
-            add_issue(n, line, f"{diff} newlines too few before this line")
-            valid_spacing = False
+            issues.add(n, line, f"{diff} newlines too few before this line")
         elif n_newlines > n_expected:
-            add_issue(n, line, f"{diff} newlines too many before this line")
-            valid_spacing = False
+            issues.add(n, line, f"{diff} newlines too many before this line")
 
         n_newlines = 0
         prev_line_type = next_line_type
 
-    if valid_lines:
-        add_nonissue("All lines have a valid format")
-    if valid_spacing:
-        add_nonissue("All spacing is valid")
 
+@check
+def are_numbers_escaped(file: File, issues: Issujo):
+    """Checks that all line-initial ordinal numbers are escaped.
 
-def are_numbers_escaped(lines: list[str]):
-    for n, line in enumerate(lines):
+    Asserts the following assumption:
+    - All lines-initial ordinal numbers are excaped.
+    """
+
+    for n, line in enumerate(file.lines):
         if re.match(r"\d+\.", line) is not None:
-            add_issue(n, line, "Unescaped line-initial ordinal")
+            issues.add(n, line, "Unescaped line-initial ordinal")
 
 
-def check_indentation(lines: list[str]):
+@check
+def check_indentation(file: File, issues: Issujo):
+    """Checks that there is indentation inside block quotes and none otherwise.
+
+    Asserts the following assumptions:
+    - Inside block quotes, lines are indented with 4 spaces.
+    - Outside of block quotes, no line is indented.
+    """
+
     in_block_quote = False
-    for n, line in enumerate(lines):
+    for n, line in enumerate(file.lines):
         if line == "#quote[":
             in_block_quote = True
         elif line == "]" or line == "]#pagebreak()":
@@ -453,28 +484,36 @@ def check_indentation(lines: list[str]):
             continue
         # Too few spaces
         elif in_block_quote and not line.startswith("    "):
-            add_issue(n, line, "Incorrect indentation inside block quote")
+            issues.add(n, line, "Incorrect indentation inside block quote")
         # Too many spaces
         elif in_block_quote and line.startswith("     "):
-            add_issue(n, line, "Incorrect indentation inside block quote")
+            issues.add(n, line, "Incorrect indentation inside block quote")
         # Leading whitespcae outside block quotes
         elif not in_block_quote and (line.startswith(" ") or line.startswith("\t")):
-            add_issue(n, line, "Unexpected indentation")
+            issues.add(n, line, "Unexpected indentation")
 
 
-def check_pagebreaks_in_block_quotes(raw: str):
-    PATTERN1 = r"#quote\[.+?\][^\w]+?#pagebreak\(\)[^\w]*?#quote\["
-    #                              ^
-    PATTERN2 = r"#quote\[.+?\][^\w]*?#pagebreak\(\)[^\w]+?#quote\["
-    #                                                   ^
-    issues = re.findall(rf"(^.*)({PATTERN1}|{PATTERN2})", raw, flags=re.DOTALL)
-    for issue in issues:
-        line_number = len(re.findall(r"\n", issue[0]))
-        line = re.findall(r"(.*?)\n", issue[1])[0]
-        add_issue(
+@check
+def check_pagebreaks_in_block_quotes(file: File, issues: Issujo):
+    """Checks that page breaks inside of block quotes are formatted corretly.
+
+    Asserts the following assumptions:
+    - All page bracks inside of block quotes are formatted as
+      `]#pagebreak()#quote[`
+      with no other whitespace inbetween.
+    """
+
+    PATTERN1 = r"#quote\[[^\]]+?\]\s+?#pagebreak\(\)\s*?#quote\["
+    #                               ^
+    PATTERN2 = r"#quote\[[^\]]+?\]\s*?#pagebreak\(\)\s+?#quote\["
+    #                                                 ^
+
+    for match in re.finditer(rf"{PATTERN1}|{PATTERN2}", file.raw, flags=re.DOTALL):
+        line_number = file.raw.count("\n", 0, match.start())
+        line = file.raw.split("\n")[line_number]
+        issues.add(
             line_number, line, "Use `]#pagebreak()#quote[` for pagebreak inside quote."
         )
-        print(len(issue))
 
 
 if __name__ == "__main__":
