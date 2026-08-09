@@ -24,13 +24,13 @@
 // Date:    1912
 // Edition: 4th (1925)
 //
-// Digital original: https://www.google.de/books/edition/Dat_veerte_Gebott/cdTTAAAAMAAJ?hl=de&gbpv=0
-// Work exhibition:  https://augustinwibbelt.de/wp-content/uploads/2022/02/21_c.jpg
+// Digital Original: https://www.google.de/books/edition/Dat_veerte_Gebott/cdTTAAAAMAAJ?hl=de&gbpv=0
+// Work Exhibition:  https://augustinwibbelt.de/wp-content/uploads/2022/02/21_c.jpg
 //
 // Released:      2026-04-12
-// Latest update: 2026-08-02
+// Latest Update: 2026-08-09
 //
-// Editorial process:
+// Editorial Process:
 //   1) Manual transcription (no markup; removed hyphens and page breaks).
 //   2) Comparison and correction against an OCR transcription.
 //   3) Added markup and re-inserted hyphens and page breaks.
@@ -122,29 +122,29 @@ Verlag von Fredebeul & Koenen, Essen (Ruhr).#pagebreak()
 
 = Inhalt\
 
-                                                Seite\
-    I. Wat was se minn  . . . . . . . . . . . .   7\
-   II. Außenwind  . . . . . . . . . . . . . . .  19\
-  III. Dat Begräffnis . . . . . . . . . . . . .  36\
-   IV. Friggerie un Wiettenschopp . . . . . . . .  51\
-    V. De Schulte schriff sine Memoiren . . . . .  67\
-   VI. Bendine  . . . . . . . . . . . . . . . .  82\
-  VII. Maonschien . . . . . . . . . . . . . . .  98\
- VIII. En Grummelschuer . . . . . . . . . . . . . 113\
-   IX. Wu sall’t wäern? . . . . . . . . . . . . . . 127\
-    X. De Här Pastor  . . . . . . . . . . . . . . . 144\
-   XI. Bendine vergätt sick . . . . . . . . . . . . . 161\
-  XII. Fröhjaohr in’n Hiärfst . . . . . . . . . . . . 174\
- XIII. Hieraoten is nich so licht, äs’t utsüht  . . . 189\
-  XIV. De Hochtied  . . . . . . . . . . . . . . 209\
-   XV. Den annern Dag . . . . . . . . . . . . 233\
-  XVI. Üöwer de Kraft . . . . . . . . . . . . . 244\
- XVII. Allerlei „Sprachnuancen“ . . . . . . . . . 259\
+#h(7cm)Seite\
+I. Wat was se minn  . . . . . . . . . . . .   7\
+II. Außenwind  . . . . . . . . . . . . . . .  19\
+III. Dat Begräffnis . . . . . . . . . . . . .  36\
+IV. Friggerie un Wiettenschopp . . . . . . . .  51\
+V. De Schulte schriff sine Memoiren . . . . .  67\
+VI. Bendine  . . . . . . . . . . . . . . . .  82\
+VII. Maonschien . . . . . . . . . . . . . . .  98\
+VIII. En Grummelschuer . . . . . . . . . . . . . 113\
+IX. Wu sall’t wäern? . . . . . . . . . . . . . . 127\
+X. De Här Pastor  . . . . . . . . . . . . . . . 144\
+XI. Bendine vergätt sick . . . . . . . . . . . . . 161\
+XII. Fröhjaohr in’n Hiärfst . . . . . . . . . . . . 174\
+XIII. Hieraoten is nich so licht, äs’t utsüht  . . . 189\
+XIV. De Hochtied  . . . . . . . . . . . . . . 209\
+XV. Den annern Dag . . . . . . . . . . . . 233\
+XVI. Üöwer de Kraft . . . . . . . . . . . . . 244\
+XVII. Allerlei „Sprachnuancen“ . . . . . . . . . 259\
 XVIII. Doppelkümmel . . . . . . . . . . . . . 277\
-  XIX. Dat Sissemänken  . . . . . . . . . . . . 291\
-   XX. Mitternacht  . . . . . . . . . . . . . . . 305\
-  XXI. De Schell will nich swiegen  . . . . . . . . 218\
- XXII. Daudenlüden un Sunndagsklocken . . . . . . 332#pagebreak()
+XIX. Dat Sissemänken  . . . . . . . . . . . . 291\
+XX. Mitternacht  . . . . . . . . . . . . . . . 305\
+XXI. De Schell will nich swiegen  . . . . . . . . 218\
+XXII. Daudenlüden un Sunndagsklocken . . . . . . 332#pagebreak()
 
 // </ FRONT MATTER >
 
@@ -6466,16 +6466,15 @@ Truta was an’t Katuffelnschellen un mur-?\
 melde:\
 
 #quote[
-  „Du bist hierher gekommen,\
-  Doch kommst du nicht geschwommen,\
-  Du kommst auch nicht geritten\
-  Und kommst auch nicht geschritten\
-]#pagebreak()
-#quote[
-  Und kommst auch nicht geflogen,\
-  Du kommst vielmehr gezogen\
-  In einer schönen Kutschen\
-  Und tust auf Rädern rutschen —“\
+    „Du bist hierher gekommen,\
+    Doch kommst du nicht geschwommen,\
+    Du kommst auch nicht geritten\
+    Und kommst auch nicht geschritten\
+]#pagebreak()#quote[
+    Und kommst auch nicht geflogen,\
+    Du kommst vielmehr gezogen\
+    In einer schönen Kutschen\
+    Und tust auf Rädern rutschen —“\
 ]
 
 Dat rächte Spektakel fonk owwer erst an, äs\
@@ -7303,22 +7302,22 @@ Wat klank un sang dat in den niewelwitten,\
 sunnenblitzenden Muorgen harin!#pagebreak()
 
 #quote[
-  „Graut —\
-  Graut —\
-  Graute Hochtied! Klink un Klank!\
-  Hu, wat sind se flink un swank!\
-  Alle verwandt un alle bekannt,\
-  Häfft jä alle so Stand äs Land.\
-  Staot —\
-  Staot —\
-  Stolt un Staot üöwer Maot un Raot!\
-  Geld un Gold hät uoppene Paot.\
-  Häs du Braut in Üöwerflaut,\
-  Grinns#footnote[weinst] in Naut de Augen raut;\
-  Klein un graut\
-  Hält de Daut\
-  Hält — de Daut\
-  De Daut.“\
+    „Graut —\
+    Graut —\
+    Graute Hochtied! Klink un Klank!\
+    Hu, wat sind se flink un swank!\
+    Alle verwandt un alle bekannt,\
+    Häfft jä alle so Stand äs Land.\
+    Staot —\
+    Staot —\
+    Stolt un Staot üöwer Maot un Raot!\
+    Geld un Gold hät uoppene Paot.\
+    Häs du Braut in Üöwerflaut,\
+    Grinns#footnote[weinst] in Naut de Augen raut;\
+    Klein un graut\
+    Hält de Daut\
+    Hält — de Daut\
+    De Daut.“\
 ]
 
 „Hä!“ Mester Tonjus wiskede sick met de\
@@ -7373,16 +7372,16 @@ Wat flaut dat smöh’ un smiedig#footnote[sanft und geschmeidig] von’n\
 Thaon harunner!#pagebreak()
 
 #quote[
-  „Segg äs, min Jüfferken,\
-  Häs wat in’t Küfferken?\
-  Häs du auk Geld —\
-  Geld — Geld?\
-  Kümms jä met Springen,\
-  Met Danzen un Singen,\
-  So Fötken för Fötken\
-  Un Pötken in Pötken,\
-  So nich dör de Welt —\
-  Welt — Welt.\
+    „Segg äs, min Jüfferken,\
+    Häs wat in’t Küfferken?\
+    Häs du auk Geld —\
+    Geld — Geld?\
+    Kümms jä met Springen,\
+    Met Danzen un Singen,\
+    So Fötken för Fötken\
+    Un Pötken in Pötken,\
+    So nich dör de Welt —\
+    Welt — Welt.\
 ]
 
 „Dat was glücket,“ sagg Mester Tonjus, „do\
@@ -7433,9 +7432,9 @@ von Pannkoken.“\
 Nu, vöran! Wi mött’t wier lüden!“\
 
 #quote[
-  „Graut —\
-  Graut —\
-  Graute Hochtied! — —“\
+    „Graut —\
+    Graut —\
+    Graute Hochtied! — —“\
 ]
 
 #line()
@@ -8128,10 +8127,10 @@ drüg, holl Jans sine Harmonika un stall sick unner\
 den Aollen sin Fenster.\
 
 #quote[
-  „Du — du — liegst mir im Herzen,\
-  Du — du — liegst mir im Sinn,\
-  Du — du — machst mir viel Schmerzen,\
-  Weißt nicht, wie gut ich dir bin —“\
+    „Du — du — liegst mir im Herzen,\
+    Du — du — liegst mir im Sinn,\
+    Du — du — machst mir viel Schmerzen,\
+    Weißt nicht, wie gut ich dir bin —“\
 ]
 
 He trock de Töne guottserbärmlick lank un\
@@ -8144,14 +8143,13 @@ zu haben. Dann muß ich ihn stärker beschwören.“\
 He fonk wier an:\
 
 #quote[
-  „Du — du — liegst mir im Magen,\
-  Du — du — liegst mir im Kropf,\
-  Ich — ich — kann’s nicht vertragen,\
-  Wo ist ein Napf oder Topf?\
-]#pagebreak()
-#quote[
-  Ja — ja — ja — ja!\
-  Wo ist ein —“\
+    „Du — du — liegst mir im Magen,\
+    Du — du — liegst mir im Kropf,\
+    Ich — ich — kann’s nicht vertragen,\
+    Wo ist ein Napf oder Topf?\
+]#pagebreak()#quote[
+    Ja — ja — ja — ja!\
+    Wo ist ein —“\
 ]
 
 Do flaug de Fensterklapp laoß.\
@@ -8483,8 +8481,8 @@ Kinner.\
 Ut de Stuowe schallde dat Leed harüöwer:\
 
 #quote[
-  „Saßen einst zwei Turteltauben — siehst du\ wohl!\
-  Saßen auf ’nem dürren Ast — siehst du wohl.“\
+    „Saßen einst zwei Turteltauben — siehst du\ wohl!\
+    Saßen auf ’nem dürren Ast — siehst du wohl.“\
 ]#pagebreak()
 
 
@@ -11710,10 +11708,10 @@ hahlen — klagen — also aufgepaßt!“\
 „Pruß män laoß!“ sagg Stöfferken.\
 
 #quote[
-  „Daut —\
-  Daut —\
-  He is daut,\
-  Is daut —“\
+    „Daut —\
+    Daut —\
+    He is daut,\
+    Is daut —“\
 ]
 
 So gonk dat erst met langsame swaore Sliäge,\
@@ -11721,21 +11719,20 @@ un dann kamm de graute Klock in Swunk un\
 raip hall nao beiden Sieten ut’n Thaon harut:\
 
 #quote[
-  „Dat deipe Lock\
-  För wen is dat?\
-  Well geiht nu sinen\
-  Lesten Patt?\
-]#pagebreak()
-#quote[
-  En Menskenkind —\
-  Of arm, of riek,\
-  Of Buer, of Küötter,\
-  Dat is nu gliek.\
-  Un was sin Hus\
-  Auk no so graut\
-  Un vull von Staat,\
-  De Daut, de Daut\
-  Nimp knappe Maot.“\
+    „Dat deipe Lock\
+    För wen is dat?\
+    Well geiht nu sinen\
+    Lesten Patt?\
+]#pagebreak()#quote[
+    En Menskenkind —\
+    Of arm, of riek,\
+    Of Buer, of Küötter,\
+    Dat is nu gliek.\
+    Un was sin Hus\
+    Auk no so graut\
+    Un vull von Staat,\
+    De Daut, de Daut\
+    Nimp knappe Maot.“\
 ]
 
 „Hä!“ sagg Mester Tonjus. He trock, wat\
@@ -11755,9 +11752,9 @@ Plackens, wo man auk sweeten kann.“\
 suohlen. Nu voran, de tweere Paose!“\
 
 #quote[
-  „Daut —\
-  Daut —\
-  He is daut — — —“\
+    „Daut —\
+    Daut —\
+    He is daut — — —“\
 ]
 
 He kreeg alls up’t Beste.\

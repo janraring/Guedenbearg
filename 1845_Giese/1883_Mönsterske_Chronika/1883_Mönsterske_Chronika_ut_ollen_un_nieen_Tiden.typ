@@ -28,7 +28,7 @@
 // Work Exhibition:  https://www.niederdeutsche-literatur.de/autoren/person-werke.php?ID=108&START=1&ORD=JAHR
 //
 // First Release: 2026-04-13
-// Latest Update: 2026-08-02
+// Latest Update: 2026-08-09
 //
 // Editorial Process:
 //   1) Manual transcription (no markup; removed hyphens and page breaks).
@@ -4091,16 +4091,16 @@ Un — kine Höhneraug’n derto.“#pagebreak()
 
 = Inhalt.\
 
-                                            Seite\
-\ 1. De Schinkensendung to rechter Tid . . . .   1\
-\ 2. De niee Pastor . . . . . . . . . . .   5\
-\ 3. De Buxe von Bändken von Gaolen . . . .  10\
-\ 4. De olle Blücher un de olle Buer . . . . .  18\
-\ 5. De beiden Dokters . . . . . . . . . .  25\
-\ 6. De kloke Paoter . . . . . . . . . . .  32\
-\ 7. De kurjose Frieer . . . . . . . . . .  43\
-\ 8. De Deputation ut H...... . . . . . .  50\
-\ 9. Willem Achtermann un Settken Essink . .  58\
+#h(7cm)Seite\
+\1. De Schinkensendung to rechter Tid . . . .   1\
+\2. De niee Pastor . . . . . . . . . . .   5\
+\3. De Buxe von Bändken von Gaolen . . . .  10\
+\4. De olle Blücher un de olle Buer . . . . .  18\
+\5. De beiden Dokters . . . . . . . . . .  25\
+\6. De kloke Paoter . . . . . . . . . . .  32\
+\7. De kurjose Frieer . . . . . . . . . .  43\
+\8. De Deputation ut H...... . . . . . .  50\
+\9. Willem Achtermann un Settken Essink . .  58\
 \10. De Riäknungsräöthin un de Klocke . . . .  69\
 \11. Doktor Holtermann un de angaohende Student  77\
 \12. An usse Bueren . . . . . . . . . . .  84\

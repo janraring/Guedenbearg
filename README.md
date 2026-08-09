@@ -204,6 +204,7 @@ Sollten Ihnen derartige Fehler auffallen, freue ich mich über Nachberichtigung 
 
 
 ## Changelog
+- **2026-08-09** Fixed spacing in block quotes.
 - **2026-08-02** Imposed new format specifications onto existing works, fixed flaws of the validation script.
 - **2026-08-01** Defined new format specifications and added a script for validating files against them.
 - **2026-04-14** Release of »De Iärfschopp«.

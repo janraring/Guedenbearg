@@ -24,13 +24,13 @@
 // Date:    1910
 // Edition: 3rd (1920)
 //
-// Digital original: https://books.google.de/books?id=C9TTAAAAMAAJ&hl=de
-// Work exhibition:  https://augustinwibbelt.de/wp-content/uploads/2022/02/21_c.jpg
+// Digital Original: https://books.google.de/books?id=C9TTAAAAMAAJ&hl=de
+// Work Exhibition:  https://augustinwibbelt.de/wp-content/uploads/2022/02/21_c.jpg
 //
 // Released:      2026-04-14
-// Latest update: 2026-08-02
+// Latest Update: 2026-08-09
 //
-// Editorial process:
+// Editorial Process:
 //   1) Manual transcription (no markup; removed hyphens and page breaks).
 //   2) Comparison and correction against an OCR transcription.
 //   3) Added markup and re-inserted hyphens and page breaks.
@@ -121,7 +121,7 @@ Dritte Auflage#pagebreak()
 
 = Inhalt\
 
-                                               Seite\
+#h(7cm)Seite\
 I. Peter-Ohm kümp . . . . . . . . . . . . . .   7\
 II. Dat Lock in’n Stammbaum . . . . . . . . .  16\
 III. An’t Heck . . . . . . . . . . . . . . . . .  27\
@@ -5818,8 +5818,8 @@ un dicht an de Holwe was, fonk ächter de Hiegg\
 ne helle Stemm an to singen:\
 
 #quote[
-  „Morgen muß ich fort von hier\
-  Und muß Abschied nehmen —“\
+    „Morgen muß ich fort von hier\
+    Und muß Abschied nehmen —“\
 ]
 
 Dat was Thresken. Braohms hadden dor en\
@@ -5827,8 +5827,8 @@ Strieppel Land liggen. Wat mogg de do up’n\
 Acker to dohen häbben?\
 
 #quote[
-  „O du allerschönste Zier,\
-  Scheiden das bringt Grämen —“\
+    „O du allerschönste Zier,\
+    Scheiden das bringt Grämen —“\
 ]
 
 He keek üöwer de Holwe. Do gonk Thresken bis\
@@ -5837,8 +5837,8 @@ Trimsen un Rade harut, en ganzen Busk lagg\
 twiärs in iähre Schüött.\
 
 #quote[
-  „Habe dich so sehr geliebt\
-  Über alle Maßen —“\
+    „Habe dich so sehr geliebt\
+    Über alle Maßen —“\
 ]
 
 „Is’t würklick waohr?“ raip Anton, „dat häff’k jä\
@@ -6542,9 +6542,9 @@ drup un ne graute dubbelte Karte drin.\
 Do stonn up:\
 
 #quote[
-  Sophia Schulze Surbrook\
-  Erwin Schulze Bulmke\
-  Verlobte.\
+    Sophia Schulze Surbrook\
+    Erwin Schulze Bulmke\
+    Verlobte.\
 ]
 
 De Meerske reet de Kart midden düör.\
@@ -10563,22 +10563,22 @@ Thresken mok buoben up iähren Bühn dat Fensterken\
 laoß un liehnde sick harut.\
 
 #quote[
-  „Es gingen zwei Verliebte ins Mailand,\
-  Es gingen zwei Verliebte ins Mailand,\
-  Und die hatten sich einander so lieb, lieb, lieb —“\
+    „Es gingen zwei Verliebte ins Mailand,\
+    Es gingen zwei Verliebte ins Mailand,\
+    Und die hatten sich einander so lieb, lieb, lieb —“\
 ]
 
 Do gonk en Blitz dör de Lucht —\
 
 #quote[
-  „Und die hatten sich einander so lieb!“\
+    „Und die hatten sich einander so lieb!“\
 ]
 
 De Grummel sweeg no. Do fonk de helle\
 Stemm wier an:\
 
 #quote[
-  „Und der Jüngling sprach zu dem Mädchen —“\
+    „Und der Jüngling sprach zu dem Mädchen —“\
 ]
 
 Do kamm dat Grummeln, un de ganze Sak\
