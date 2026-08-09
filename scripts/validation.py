@@ -29,11 +29,14 @@ def main():
 
     if len(sys.argv) > 1:
         paths = sys.argv[1:]
+        paths = [Path(p) for p in paths]
     else:
         repo_root = Path(__file__).resolve().parents[1]
         paths = list(repo_root.rglob("*.typ"))
 
     for path in paths:
+        if not path.name[0].isnumeric():
+            continue
         try:
             if not isinstance(path, Path):
                 path = Path(path)
@@ -64,6 +67,8 @@ def validate_file(content: str):
     has_trailing_whitespace(lines)
     has_valid_spacing(lines)
     are_numbers_escaped(lines)
+    check_indentation(lines)
+    check_pagebreaks_in_block_quotes(content)
 
     return ISSUES, NON_ISSUES
 
@@ -94,7 +99,7 @@ def print_verdict(file_name: str, issues: list[Issue], non_issues: list[NonIssue
         print(f"📜 {file_name}  ✅")
         return
 
-    print(f"📜 {file_name}  🚨 {len(issues)} Issues:")
+    print(f"📜 {file_name}\n  🚨 {len(issues)} Issues:")
     for issue in issues:
         print(
             f"    ⚠️  [{issue.line_number + 1}] {issue.msg.upper()}: {issue.line_text}"
@@ -435,6 +440,41 @@ def are_numbers_escaped(lines: list[str]):
     for n, line in enumerate(lines):
         if re.match(r"\d+\.", line) is not None:
             add_issue(n, line, "Unescaped line-initial ordinal")
+
+
+def check_indentation(lines: list[str]):
+    in_block_quote = False
+    for n, line in enumerate(lines):
+        if line == "#quote[":
+            in_block_quote = True
+        elif line == "]" or line == "]#pagebreak()":
+            in_block_quote = False
+        elif in_block_quote and line == "]#pagebreak()#quote[":
+            continue
+        # Too few spaces
+        elif in_block_quote and not line.startswith("    "):
+            add_issue(n, line, "Incorrect indentation inside block quote")
+        # Too many spaces
+        elif in_block_quote and line.startswith("     "):
+            add_issue(n, line, "Incorrect indentation inside block quote")
+        # Leading whitespcae outside block quotes
+        elif not in_block_quote and (line.startswith(" ") or line.startswith("\t")):
+            add_issue(n, line, "Unexpected indentation")
+
+
+def check_pagebreaks_in_block_quotes(raw: str):
+    PATTERN1 = r"#quote\[.+?\][^\w]+?#pagebreak\(\)[^\w]*?#quote\["
+    #                              ^
+    PATTERN2 = r"#quote\[.+?\][^\w]*?#pagebreak\(\)[^\w]+?#quote\["
+    #                                                   ^
+    issues = re.findall(rf"(^.*)({PATTERN1}|{PATTERN2})", raw, flags=re.DOTALL)
+    for issue in issues:
+        line_number = len(re.findall(r"\n", issue[0]))
+        line = re.findall(r"(.*?)\n", issue[1])[0]
+        add_issue(
+            line_number, line, "Use `]#pagebreak()#quote[` for pagebreak inside quote."
+        )
+        print(len(issue))
 
 
 if __name__ == "__main__":
